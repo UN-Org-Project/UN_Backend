@@ -7,7 +7,7 @@ const Teacher = require("../models/teacher");
 //need id for spacifice parent
 exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
   const studentClass = req.body.class;
-  Teacher.find({})
+  Teacher.find({ class: studentClass })
     .then((dbTeachers) => {
       // this for to get id for the current teacher
       for (
@@ -27,14 +27,14 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
             subject: "History",
             mark: "70",
             note: "this is note",
-            level: 2,
+            level: 2
           });
           dbStudent.subjects.push({
-            subject: "Math",
+            subject: "Math"
           });
 
           dbStudent.subjects.push({
-            subject: "English",
+            subject: "English"
           });
           dbStudent.save();
           //
@@ -91,7 +91,7 @@ exports.addSubjectDetails = (req, res) => {
     .catch((err) => {
       res.json(err);
     });
-}; 
+};
 
 exports.getAllStudents = (req, res) => {
   Student.find({})
@@ -111,7 +111,7 @@ exports.getNumberOfAllStudents = (req, res) => {
     .catch((err) => {
       res.json(err);
     });
-}; 
+};
 
 //NOt Used now
 
@@ -164,5 +164,3 @@ exports.getNumberOfAllStudents = (req, res) => {
 //       res.json(err);
 //     });
 // };
-
-

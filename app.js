@@ -1,13 +1,14 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const multer = require("multer");
+//const multer = require("multer");
 const bodyParser = require("body-parser");
 
 const authRoutes = require("./routes/auth");
 const parentRoutes = require("./routes/parent");
 const teacherRoutes = require("./routes/teacher");
 const studentRoutes = require("./routes/student");
+const adminRoutes = require("./routes/Admin");
 
 app.use(bodyParser.json()); // application/json
 app.use(express.json()); // its important to Thunder Client done
@@ -23,12 +24,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Midlwares
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 app.use(parentRoutes);
 app.use(teacherRoutes);
 app.use(studentRoutes);
+app.use(adminRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -40,7 +41,7 @@ app.use((error, req, res, next) => {
 
 //connecting to database
 const MONGODB_URI =
-  // "mongodb+srv://yaseen:20203302@usermanagement.2r3p529.mongodb.net/Parents_Studnts";
+  //"mongodb+srv://yaseen:20203302@usermanagement.2r3p529.mongodb.net/Parents_Studnts";
   "mongodb+srv://muathmhawich94:0932681293@cluster0.zgtx4nb.mongodb.net/parent-studnet-teacher";
 
 //listen
