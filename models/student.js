@@ -1,9 +1,7 @@
 var mongoose = require("mongoose");
 
-// Get the Schema constructor
 var Schema = mongoose.Schema;
 
-// Using Schema constructor, create a StudentSchema
 var StudentSchema = new Schema({
   name: {
     type: String,
@@ -25,16 +23,7 @@ var StudentSchema = new Schema({
     type: Number,
     required: true,
   },
-  notes: {
-    type: String,
-    required: true,
-  },
-  //absence:[Object],
-  absence: [
-    Object, //this for tell db we want store students as objects
-  ],
-
-  subjects: [Object],
+  totalRate: Number,
 
   class: {
     type: String,
@@ -48,10 +37,122 @@ var StudentSchema = new Schema({
     type: String,
     required: true,
   },
+  notes: [
+    {
+      note: String,
+      noteDate: { type: Date, default: Date.now() },
+      _id: false, //this for stop creating auto _id
+    },
+  ],
+  absence: [
+    {
+      absecnceState: String,
+      abcenceDate: { type: Date, default: Date.now() },
+      _id: false,
+    },
+  ],
+
+  dalyRate: [
+    {
+      stare: Number,
+      _id: false,
+    },
+  ],
+  typeExam: [
+    {
+      first: {
+        subjects: {
+          math: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          arbic: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          history: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          english: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          science: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+        },
+      },
+      second: {
+        subjects: {
+          math: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          arbic: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          history: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          english: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          science: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+        },
+      },
+      final: {
+        subjects: {
+          math: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          arbic: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          history: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          english: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+          science: {
+            mark: Number,
+            note: String,
+            rate: String,
+          },
+        },
+      },
+      _id: false,
+    },
+  ],
   id: {
     type: Schema.Types.ObjectId, //this for tell database create _id for the student
   },
 });
 
-// Create model from the schema
 module.exports = mongoose.model("Student", StudentSchema);

@@ -10,4 +10,6 @@ router.post("/teacher", teacherController.postCreatTeacher);
 
 router.get('/getNumberOfAllTeachers',teacherController.getNumberOfAllTeachers)
 
+
+
 module.exports = router;

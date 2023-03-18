@@ -22,23 +22,102 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
-          // maby delte later
-          dbStudent.subjects.push({
-            subject: "History",
-            mark: "70",
-            note: "this is note",
-            level: 2,
-          });
-          dbStudent.subjects.push({
-            subject: "Math",
-          });
+          // //to add absence later
+          //  dbStudent.absence.push({
+          //   absecnceState: "absence"
+          //  })
 
-          dbStudent.subjects.push({
-            subject: "English",
-          });
-          dbStudent.save();
-          //
+          //  dbStudent.absence.push({
+          //   absecnceState: "absence"
+          //  })
 
+          // //to add notes later
+          // dbStudent.notes.push({
+          //     note: "This is not 1"
+          //   })
+          //   dbStudent.notes.push({
+          //     note: "This is not 2"
+          //   })
+
+          // //to add dalyRate later
+          // dbStudent.dalyRate.push({
+          //   stare: 2
+          // })
+          // dbStudent.dalyRate.push({
+          //   stare: 4
+          // })
+
+          // //to add TotlaRate later
+          // dbStudent.totalRate = 75;
+
+          // //to add type exam datails
+          // dbStudent.typeExam.push({
+          //   first: {
+          //     subjects: {
+          //       math: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+          //   second: {
+          //     subjects: {
+          //       math: {
+          //         mark: 80,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 90,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+          //   final: {
+          //     subjects: {
+          //       math: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+          // });
+
+
+
+
+
+
+
+          
           //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
@@ -46,12 +125,18 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
             { new: true }
           );
           //put student in correct parent
-          return await Parent.findOneAndUpdate(
+           await Parent.findOneAndUpdate(
             { _id: req.params.id },
             { $push: { allStudents: dbStudent } },
             { new: true }
-          );
+          )
+            Student.updateOne({name:'yyy'}).then(dbStudent => {
+              dbStudent.name = 'updated'
+            })
+          dbStudent.save();
+
         })
+
         .catch((err) => {
           res.json(err);
         });
@@ -91,7 +176,7 @@ exports.addSubjectDetails = (req, res) => {
     .catch((err) => {
       res.json(err);
     });
-}; 
+};
 
 exports.getAllStudents = (req, res) => {
   Student.find({})
@@ -111,7 +196,7 @@ exports.getNumberOfAllStudents = (req, res) => {
     .catch((err) => {
       res.json(err);
     });
-}; 
+};
 
 //NOt Used now
 
@@ -164,5 +249,3 @@ exports.getNumberOfAllStudents = (req, res) => {
 //       res.json(err);
 //     });
 // };
-
-
