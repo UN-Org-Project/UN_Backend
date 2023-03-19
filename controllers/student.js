@@ -7,7 +7,7 @@ const Teacher = require("../models/teacher");
 //need id for spacifice parent
 exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
   const studentClass = req.body.class;
-  Teacher.find({})
+  Teacher.find({ class: studentClass })
     .then((dbTeachers) => {
       // this for to get id for the current teacher
       for (
@@ -22,121 +22,21 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
-          // //to add absence later
-          //  dbStudent.absence.push({
-          //   absecnceState: "absence"
-          //  })
-
-          //  dbStudent.absence.push({
-          //   absecnceState: "absence"
-          //  })
-
-          // //to add notes later
-          // dbStudent.notes.push({
-          //     note: "This is not 1"
-          //   })
-          //   dbStudent.notes.push({
-          //     note: "This is not 2"
-          //   })
-
-          // //to add dalyRate later
-          // dbStudent.dalyRate.push({
-          //   stare: 2
-          // })
-          // dbStudent.dalyRate.push({
-          //   stare: 4
-          // })
-
-          // //to add TotlaRate later
-          // dbStudent.totalRate = 75;
-
-          // //to add type exam datails
-          // dbStudent.typeExam.push({
-          //   first: {
-          //     subjects: {
-          //       math: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       arbic: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       history: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //     },
-          //   },
-          //   second: {
-          //     subjects: {
-          //       math: {
-          //         mark: 80,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       arbic: {
-          //         mark: 90,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       history: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //     },
-          //   },
-          //   final: {
-          //     subjects: {
-          //       math: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       arbic: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //       history: {
-          //         mark: 60,
-          //         note: "this is math note",
-          //         rate: "this is  math rate",
-          //       },
-          //     },
-          //   },
-          // });
-
-
-
-
-
-
-
-          
+         
           //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
-            { $push: { allStudents: dbStudent } },
+            { $push: { allStudents: dbStudent._id } },
             { new: true }
           );
           //put student in correct parent
-           await Parent.findOneAndUpdate(
+          await Parent.findOneAndUpdate(
             { _id: req.params.id },
-            { $push: { allStudents: dbStudent } },
+            { $push: { allStudents: dbStudent._id } },
             { new: true }
-          )
-            Student.updateOne({name:'yyy'}).then(dbStudent => {
-              dbStudent.name = 'updated'
-            })
+          );
           dbStudent.save();
-
         })
-
         .catch((err) => {
           res.json(err);
         });
@@ -163,7 +63,7 @@ exports.posAbsence = (req, res) => {
     });
 };
 
-//need fixing
+//delete later
 exports.addSubjectDetails = (req, res) => {
   const studentId = req.params.id;
   const bodyinfo = req.body;
@@ -248,4 +148,25 @@ exports.getNumberOfAllStudents = (req, res) => {
 //     .catch((err) => {
 //       res.json(err);
 //     });
+// };
+
+//shoud delete later
+// exports.addStudent = (req, res) => {
+//   //const { studentName, Gender, image, dateOfBirth, className } = req.body;
+
+//   Student.create(req.body).then((dbStudent) => {
+//     dbStudent.typeExam.first.subjects.math.mark = "Not avalibale yet!";
+//      dbStudent.typeExam.first.subjects.math.note ="Not avalibale yet!";
+//      dbStudent.typeExam.first.subjects.math.rate ="Not avalibale yet!";
+
+//     dbStudent.typeExam.first.subjects.english.mark ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.english.note ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.english.rate ="Not avalibale yet!";
+
+//     dbStudent.typeExam.first.subjects.arbic.mark ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.arbic.note ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.arbic.rate ="Not avalibale yet!";
+
+//     return dbStudent.save().then(res.json("student created successfully"));
+//   });
 // };

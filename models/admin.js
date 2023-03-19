@@ -4,8 +4,8 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 // Using Schema constructor, create ParentSchema
-var ParentSchema = new Schema({
-  parentName: {
+var adminSchema = new Schema({
+  name: {
     type: String,
     required: true
   },
@@ -21,19 +21,26 @@ var ParentSchema = new Schema({
     type: String,
     required: true
   },
-  telepohoneNumber: {
-    type: String,
-    required: true
-  },
-  numberOfChildren: {
-    type: Number,
-    required: true
-  },
+
   allStudents: [
     Object, //this for tell db we want store students as objects
     {
       type: Schema.Types.ObjectId,
       ref: "Student"
+    }
+  ],
+  allParents: [
+    Object, //this for tell db we want store students as objects
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Parent"
+    }
+  ],
+  allTeacher: [
+    Object, //this for tell db we want store students as objects
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Teacher"
     }
   ],
   state: {
@@ -43,4 +50,4 @@ var ParentSchema = new Schema({
 });
 
 // Create model from the schema
-module.exports = mongoose.model("Parent", ParentSchema);
+module.exports = mongoose.model("Admin", adminSchema);

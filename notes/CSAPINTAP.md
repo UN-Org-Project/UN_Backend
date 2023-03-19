@@ -40,3 +40,95 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
       res.json(err);
     });
 };
+
+
+
+
+
+
+
+
+  // //to add notes later
+          // dbStudent.notes.push({
+          //     note: "This is not 1"
+          //   })
+          //   dbStudent.notes.push({
+          //     note: "This is not 2"
+          //   })
+
+          // //to add dalyRate later
+          // dbStudent.dalyRate.push({
+          //   stare: 2
+          // })
+          // dbStudent.dalyRate.push({
+          //   stare: 4
+          // })
+
+          // //to add TotlaRate later
+          // dbStudent.totalRate = 75;
+
+          // //to add type exam datails
+          // dbStudent.typeExam.push({
+          //   first: {
+          //     subjects: {
+          //       math: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+          //   second: {
+          //     subjects: {
+          //       math: {
+          //         mark: 80,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 90,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+          //   final: {
+          //     subjects: {
+          //       math: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       arbic: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //       history: {
+          //         mark: 60,
+          //         note: "this is math note",
+          //         rate: "this is  math rate",
+          //       },
+          //     },
+          //   },
+
+          
+          // });
+
+         // dbStudent.save();
+
