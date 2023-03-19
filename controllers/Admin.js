@@ -73,7 +73,7 @@ exports.postCreatParent = (req, res) => {
   Parent.find({ emailAdress: emailAdress, telepohoneNumber: telephonNumber })
     .then(async (parent) => {
       if (parent.length == 0) {
-        // console.log(studentName);
+        //create student
         const student = new Student({
           studentName: studentName,
           gender: Gender,

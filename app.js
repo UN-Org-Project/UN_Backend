@@ -1,3 +1,5 @@
+//gmail is ilovesyria898testnode@gmail.com
+// or pmuojgznqazvmwmp
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -55,8 +57,5 @@ mongoose
     });
   })
   .catch((err) => {
-    if (!err.statuscode) {
-      err.statuscode = 500;
-    }
-    next(err);
+    console.log(err);
   });

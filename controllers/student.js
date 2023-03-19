@@ -22,35 +22,20 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
-          // maby delte later
-          dbStudent.subjects.push({
-            subject: "History",
-            mark: "70",
-            note: "this is note",
-            level: 2
-          });
-          dbStudent.subjects.push({
-            subject: "Math"
-          });
-
-          dbStudent.subjects.push({
-            subject: "English"
-          });
-          dbStudent.save();
-          //
-
+         
           //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
-            { $push: { allStudents: dbStudent } },
+            { $push: { allStudents: dbStudent._id } },
             { new: true }
           );
           //put student in correct parent
-          return await Parent.findOneAndUpdate(
+          await Parent.findOneAndUpdate(
             { _id: req.params.id },
-            { $push: { allStudents: dbStudent } },
+            { $push: { allStudents: dbStudent._id } },
             { new: true }
           );
+          dbStudent.save();
         })
         .catch((err) => {
           res.json(err);
@@ -78,7 +63,7 @@ exports.posAbsence = (req, res) => {
     });
 };
 
-//need fixing
+//delete later
 exports.addSubjectDetails = (req, res) => {
   const studentId = req.params.id;
   const bodyinfo = req.body;
@@ -163,4 +148,25 @@ exports.getNumberOfAllStudents = (req, res) => {
 //     .catch((err) => {
 //       res.json(err);
 //     });
+// };
+
+//shoud delete later
+// exports.addStudent = (req, res) => {
+//   //const { studentName, Gender, image, dateOfBirth, className } = req.body;
+
+//   Student.create(req.body).then((dbStudent) => {
+//     dbStudent.typeExam.first.subjects.math.mark = "Not avalibale yet!";
+//      dbStudent.typeExam.first.subjects.math.note ="Not avalibale yet!";
+//      dbStudent.typeExam.first.subjects.math.rate ="Not avalibale yet!";
+
+//     dbStudent.typeExam.first.subjects.english.mark ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.english.note ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.english.rate ="Not avalibale yet!";
+
+//     dbStudent.typeExam.first.subjects.arbic.mark ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.arbic.note ="Not avalibale yet!";
+//     dbStudent.typeExam.first.subjects.arbic.rate ="Not avalibale yet!";
+
+//     return dbStudent.save().then(res.json("student created successfully"));
+//   });
 // };
