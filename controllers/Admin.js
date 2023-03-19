@@ -15,16 +15,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Added astatic Admin to manage the process for add teacher and add parent
+//Added astatic Admin to manage the process for add teacher and add parent
 exports.addAdmin = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   bcrypt
-    .hash("amuath", 12)
+    .hash("muath", 12)
     .then((password) => {
       const admin = new Admin({
         name: name,
-        userName: "muath Mhawich",
+        userName: "muath",
         password: password,
         emailAdress: email,
         state: "Admin"
@@ -32,7 +32,7 @@ exports.addAdmin = (req, res, next) => {
       return admin.save();
     })
     .then((result) => {
-      res.status(201).json({ message: "Admin created!", parentId: result._id });
+      res.status(200).json({ message: "Admin created!", parentId: result._id });
     })
     .catch((err) => console.log(err));
 };
@@ -49,7 +49,22 @@ exports.postCreatParent = (req, res) => {
     emailAdress,
     telephonNumber
   } = req.body;
-
+  if (
+    !studentName ||
+    !Gender ||
+    !image ||
+    !dateOfBirth ||
+    !className ||
+    !parentName ||
+    !emailAdress ||
+    !telephonNumber
+  ) {
+    const error = new Error(
+      "Some input are missing! check the input and try again"
+    );
+    error.statuscode = 422;
+    throw error;
+  }
   const userName = generateUsername("P@", emailAdress);
 
   const password = generatePassword("P", 11);
@@ -95,13 +110,16 @@ exports.postCreatParent = (req, res) => {
                   <a href="http://localhost:3000/login">Login</a> . </h4>
                  `
               });
-              return res.status(201).json({
+              return res.status(200).json({
                 message: "new Parent created!",
                 parentId: parent._id
               });
             });
         } catch (err) {
-          return console.log(err);
+          if (!err.statuscode) {
+            err.statuscode = 500;
+          }
+          next(err);
         }
       } else {
         const student = new Student({
@@ -120,17 +138,25 @@ exports.postCreatParent = (req, res) => {
             },
             { new: true }
           );
-          return res.status(201).json({
+          return res.status(200).json({
             message:
               "the parent is excest the student become involved the parent",
             StudentId: student_3._id
           });
-        } catch (err_1) {
-          return console.log(err_1);
+        } catch (err) {
+          if (!err.statuscode) {
+            err.statuscode = 500;
+          }
+          next(err);
         }
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      if (!err.statuscode) {
+        err.statuscode = 500;
+      }
+      next(err);
+    });
 };
 
 exports.postCreatTeacher = (req, res) => {
@@ -188,7 +214,7 @@ exports.postCreatTeacher = (req, res) => {
         })
         .then((result) => {
           res
-            .status(201)
+            .status(200)
             .json({ message: "Teacher created!", teacherId: result._id });
         });
     })
@@ -198,7 +224,7 @@ exports.postCreatTeacher = (req, res) => {
 // unique password
 function generatePassword(type, length) {
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345678912346758900099837465253226728435advfgdfghrfdds1122345566";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGH012345678912346758900099837465253226728435advfgdfghrfdds1122345566";
   let password = "";
   let suffix = 1;
   for (let i = 0; i < length; i++) {
