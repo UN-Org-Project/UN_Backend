@@ -22,9 +22,14 @@ var StudentSchema = new Schema({
   stars: Number,
 
   // totalAbsence: Number,
+<<<<<<< HEAD
 
   studentLevelRate: Number,
+=======
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
 
+  studentLevelRate : Number,
+  
   class: {
     type: String,
     required: true,
@@ -53,33 +58,57 @@ var StudentSchema = new Schema({
       _id: false,
     },
   ],
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
   typeExam: {
     first: {
       subjects: {
         math: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         arbic: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         history: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         english: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         science: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
       },
     },
@@ -88,27 +117,47 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         arbic: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         history: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         english: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         science: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
       },
     },
@@ -117,27 +166,47 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         arbic: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         history: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         english: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
         science: {
           mark: String,
           note: String,
+<<<<<<< HEAD
           star: Number,
+=======
+          rate: String,
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
         },
       },
     },

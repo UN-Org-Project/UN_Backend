@@ -35,10 +35,11 @@ app.use(adminRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
-  const status = error.statusCode || 500;
-  const message = error.message;
+  const status = error.statuscode || 500;
+  const message =
+    error.message || "some thing wrong! Error in the server please try again ";
   const data = error.data;
-  res.status(status).json({ message: message, data: data });
+  res.status(status).json({ message: message, data: data, status: status });
 });
 
 //connecting to database
@@ -51,8 +52,8 @@ mongoose
   .connect(MONGODB_URI)
   .then(console.log("Database Connected!"))
   .then((result) => {
-    app.listen(3000, () => {
-      console.log("The server is listing on ", 3000, "now");
+    app.listen(8000, () => {
+      console.log("The server is listing on ", 8000, "now");
     });
   })
   .catch((err) => {

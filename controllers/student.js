@@ -22,6 +22,7 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
+<<<<<<< HEAD
           // // maby delte later
           // dbStudent.subjects.push({
           //   subject: "History",
@@ -39,6 +40,9 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
           //
 
+=======
+         
+>>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
           //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
