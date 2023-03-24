@@ -22,28 +22,7 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
-<<<<<<< HEAD
-          // // maby delte later
-          // dbStudent.subjects.push({
-          //   subject: "History",
-          //   mark: "70",
-          //   note: "this is note",
-          //   level: 2,
-          // });
-          // dbStudent.subjects.push({
-          //   subject: "Math",
-          // });
-
-          // dbStudent.subjects.push({
-          //   subject: "English",
-          // });
-
-          //
-
-=======
-         
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
-          //put student in correct teacher
+ //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
             { $push: { allStudents: dbStudent._id } },
