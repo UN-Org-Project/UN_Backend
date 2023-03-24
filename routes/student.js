@@ -28,11 +28,8 @@ router.post("/addSubjectDetails/:id", studentController.addSubjectDetails);
 
 //should delete it later
 //create dammy student
-<<<<<<< HEAD
 // router.post('/addStudent', studentController.addStudent)
-=======
-router.post('/addStudent', studentController.addStudent)
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
+// router.post('/addStudent', studentController.addStudent)
 
 
 

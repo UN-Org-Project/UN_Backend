@@ -28,11 +28,9 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
-<<<<<<< HEAD
+
     "pdfkit": "^0.13.0",
     "pdfkit-table": "^0.1.99",
-=======
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
     "uuid": "^9.0.0"

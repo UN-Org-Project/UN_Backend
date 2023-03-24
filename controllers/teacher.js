@@ -29,15 +29,9 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
   const note = req.body.note;
   const star = req.body.rate;
 
-<<<<<<< HEAD
-  Student.findOne({ _id: "641af0a29bce6b7854a85621" })
-    //here if we add a new absence should we call getTotalRate ?
-    .then((dbStudent) => {
-=======
   Student.findOne({ _id: "641734f22460cdb8b1de6dc9" })
   //here if we add a new absence should we call getTotalRate ?   
   .then((dbStudent) => {
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
       dbStudent.absence.push({
         absecnceState: absence,
       });
@@ -59,20 +53,6 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
 
 // see later
 exports.getStudentLevelRate = (req, res, next) => {
-<<<<<<< HEAD
-  let sum = 0;
-  let numOfStars = 0;
-  Student.findOne({ _id: "641af0a29bce6b7854a85621" })
-    .then((dbStudent) => {
-      // studentLevelRate = dbStudent.dalyRate[0].star
-      dbStudent.dalyRate.forEach((s) => {
-        numOfStars++;
-        return (sum += s.star);
-      });
-      sum /= numOfStars;
-      sum *= 20;
-      dbStudent.studentLevelRate = Math.trunc(sum);
-=======
   let sum = 0; 
   let numOfStars = 0
   Student.findOne({ _id: "641734f22460cdb8b1de6dc9" })
@@ -85,7 +65,6 @@ exports.getStudentLevelRate = (req, res, next) => {
     sum /= numOfStars
     sum *= 20;
     dbStudent.studentLevelRate = Math.trunc(sum)
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
       dbStudent.save();
     })
     .then((result) => {
@@ -110,128 +89,14 @@ exports.getStudentLevelRate = (req, res, next) => {
 //   });
 // };
 
-<<<<<<< HEAD
-exports.addtypeExam = (req, res, next) => {
-  const { type, subject, mark, note, star } = req.body;
-  Student.findOne({ _id: "641af0a29bce6b7854a85621" })
-=======
 
 exports.addtypeExam = (req, res, next) => {
   const { type, subject, mark, note, rate } = req.body;
-  Student.findOne({ _id: "641734f22460cdb8b1de6dc9" })
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
+  Student.findOne({ _id: "641e10ba21fa64d731bc4479" })
     .then((dbStudent) => {
       const firstSubjects = dbStudent.typeExam.first.subjects;
       const secondSubjects = dbStudent.typeExam.second.subjects;
       const finalSubjects = dbStudent.typeExam.final.subjects;
-<<<<<<< HEAD
-
-      const mathF = () => {
-        firstSubjects.math.mark = mark;
-        firstSubjects.math.note = note;
-        firstSubjects.math.star = star;
-      };
-      const englishF = () => {
-        firstSubjects.english.mark = mark;
-        firstSubjects.english.note = note;
-        firstSubjects.english.star = star;
-      };
-      const arbicF = () => {
-        firstSubjects.arbic.mark = mark;
-        firstSubjects.arbic.note = note;
-        firstSubjects.arbic.star = star;
-      };
-      const historyF = () => {
-        firstSubjects.history.mark = mark;
-        firstSubjects.history.note = note;
-        firstSubjects.history.star = star;
-      };
-      const scienceF = () => {
-        firstSubjects.science.mark = mark;
-        firstSubjects.science.note = note;
-        firstSubjects.science.star = star;
-      };
-      const mathS = () => {
-        secondSubjects.math.mark = mark;
-        secondSubjects.math.note = note;
-        secondSubjects.math.star = star;
-      };
-      const englishS = () => {
-        secondSubjects.english.mark = mark;
-        secondSubjects.english.note = note;
-        secondSubjects.english.star = star;
-      };
-      const arbicS = () => {
-        secondSubjects.arbic.mark = mark;
-        secondSubjects.arbic.note = note;
-        secondSubjects.arbic.star = star;
-      };
-      const historyS = () => {
-        secondSubjects.history.mark = mark;
-        secondSubjects.history.note = note;
-        secondSubjects.history.star = star;
-      };
-      const scienceS = () => {
-        secondSubjects.science.mark = mark;
-        secondSubjects.science.note = note;
-        secondSubjects.science.star = star;
-      };
-
-      const mathFinal = () => {
-        finalSubjects.math.mark = mark;
-        finalSubjects.math.note = note;
-        finalSubjects.math.star = star;
-      };
-      const englishFinal = () => {
-        finalSubjects.english.mark = mark;
-        finalSubjects.english.note = note;
-        finalSubjects.english.star = star;
-      };
-      const arbicFinal = () => {
-        finalSubjects.arbic.mark = mark;
-        finalSubjects.arbic.note = note;
-        finalSubjects.arbic.star = star;
-      };
-      const historyFinal = () => {
-        finalSubjects.history.mark = mark;
-        finalSubjects.history.note = note;
-        finalSubjects.history.star = star;
-      };
-      const scienceFinal = () => {
-        finalSubjects.science.mark = mark;
-        finalSubjects.science.note = note;
-        finalSubjects.science.star = star;
-      };
-
-      const EqualFirstSubj = () => {
-        if (subject == "math") mathF();
-        if (subject == "english") englishF();
-        if (subject == "arbic") arbicF();
-        if (subject == "history") historyF();
-        if (subject == "science") scienceF();
-      };
-      const EqualSecondSubj = () => {
-        if (subject == "math") mathS();
-        if (subject == "english") englishS();
-        if (subject == "arbic") arbicS();
-        if (subject == "history") historyS();
-        if (subject == "science") scienceS();
-      };
-      const EqualFinalSubj = () => {
-        if (subject == "math") mathFinal();
-        if (subject == "english") englishFinal();
-        if (subject == "arbic") arbicFinal();
-        if (subject == "history") historyFinal();
-        if (subject == "science") scienceFinal();
-      };
-
-      if (type == "first") {
-        EqualFirstSubj();
-      } else if (type == "second") {
-        EqualSecondSubj();
-      } else if (type == "final") {
-        EqualFinalSubj();
-=======
       if (type == "first") {
         if (subject == "math") {
           firstSubjects.math.mark = mark;
@@ -283,7 +148,6 @@ exports.addtypeExam = (req, res, next) => {
           finalSubjects.arbic.note = note;
           finalSubjects.arbic.rate = rate;
         }
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
       }
       dbStudent.save();
     })
@@ -295,8 +159,6 @@ exports.addtypeExam = (req, res, next) => {
     });
 };
 
-<<<<<<< HEAD
-=======
 
 // exports.addAbsence = (req, res, next) => {
 //   const absence = req.body.absence;
@@ -331,4 +193,3 @@ exports.addtypeExam = (req, res, next) => {
 //       console.log(err);
 //     });
 // };
->>>>>>> 0e0233e9c999bf8e9403365c560c910ff832ff82
