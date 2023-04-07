@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const existingUsernames = [];
 const existingpassword = [];
 //const sendgridtransport = require("nodemailer-sendgrid-transport");
-const transporter = nodemailer.createTransport({
+const transporter =nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
@@ -63,7 +63,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className 
         });
         try {
           const student_1 = await student.save();

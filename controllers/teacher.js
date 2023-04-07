@@ -92,7 +92,7 @@ exports.getStudentLevelRate = (req, res, next) => {
 
 exports.addtypeExam = (req, res, next) => {
   const { type, subject, mark, note, rate } = req.body;
-  Student.findOne({ _id: "641734f22460cdb8b1de6dc9" })
+  Student.findOne({ _id: "641e10ba21fa64d731bc4479" })
     .then((dbStudent) => {
       const firstSubjects = dbStudent.typeExam.first.subjects;
       const secondSubjects = dbStudent.typeExam.second.subjects;

@@ -27,7 +27,8 @@ router.post("/addSubjectDetails/:id", studentController.addSubjectDetails);
 
 //should delete it later
 //create dammy student
-//router.post('/addStudent', studentController.addStudent)
+// router.post('/addStudent', studentController.addStudent)
+// router.post('/addStudent', studentController.addStudent)
 
 // //shoud delete this middleware later
 // //delete all from DB

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const { getAllStudents } = require("./student");
 const student = require("../models/student");
 
+
 exports.getAllParents = (req, res) => {
   Parent.find({})
     .then((dbParents) => {
@@ -120,3 +121,4 @@ exports.getNumberOfAllParents = (req, res) => {
       res.json(err);
     });
 };
+

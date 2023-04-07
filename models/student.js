@@ -25,6 +25,8 @@ var StudentSchema = new Schema({
 
   studentLevelRate: Number,
 
+  studentLevelRate: Number,
+
   class: {
     type: String,
     required: true
@@ -60,27 +62,27 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         arbic: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         history: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         english: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         science: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         }
       }
     },
@@ -89,27 +91,27 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         arbic: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         history: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         english: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         science: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         }
       }
     },
@@ -118,27 +120,27 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         arbic: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         history: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         english: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         },
         science: {
           mark: String,
           note: String,
-          rate: String
+          star: Number
         }
       }
     },

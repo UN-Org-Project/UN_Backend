@@ -22,8 +22,7 @@ exports.creatStudentAndPutHimInCurrentTeacherAndParent = (req, res) => {
 
       Student.create(req.body)
         .then(async (dbStudent) => {
-         
-          //put student in correct teacher
+ //put student in correct teacher
           await Teacher.findOneAndUpdate(
             { _id: idTeacher },
             { $push: { allStudents: dbStudent._id } },
