@@ -23,7 +23,7 @@ exports.getPdfDoc = (req, res) => {
 
     const pdfPath = path.join(__dirname + "/pdfs", "report.pdf");
     const imagePath = path.join(__dirname + "/images", "st2.jpg");
-
+    
     const stream = fs.createWriteStream(pdfPath);
 
     Student.findOne({ _id: "641af0a29bce6b7854a85621" })

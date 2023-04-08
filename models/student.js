@@ -11,10 +11,10 @@ var StudentSchema = new Schema({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-    required: true,
-  },
+  // image: {
+  //   type: String,
+  //   required: true,
+  // },
   dateOfBirth: {
     type: String,
     required: true,
@@ -25,14 +25,12 @@ var StudentSchema = new Schema({
 
   studentLevelRate: Number,
 
-  studentLevelRate: Number,
-
   class: {
     type: String,
     required: true,
   },
 
-  behavior: String,
+  // behavior: String,
 
   notes: [
     {
