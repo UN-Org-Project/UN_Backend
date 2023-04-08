@@ -1,6 +1,7 @@
 //const { validationResult } = require('express-validator/check');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
 const Teacher = require("../models/teacher");
 const Parent = require("../models/parent");
@@ -43,7 +44,25 @@ exports.login = async (req, res, next) => {
     //   { expiresIn: "1h" }
     // );
     //res.status(200).json({ loadedUser: loadedUser });
-    res.status(200).json({ id: loadedUser._id, state: loadedUser.state });
+    //7a982130-a74a-4f66-bcc2-6a0b102fdff0
+    try {
+      const r = await axios.put(
+        "https://api.chatengine.io/users/",
+        {
+          username: loadedUser._id.toString(),
+          secret: loadedUser.userName,
+          first_name: loadedUser.name
+        },
+        { headers: { "Private-Key": "7a982130-a74a-4f66-bcc2-6a0b102fdff0" } }
+      );
+      res.status(200).json({
+        id: loadedUser._id,
+        state: loadedUser.state,
+        chating_username: r.data
+      });
+    } catch (e) {
+      console.log(e);
+    }
   } catch (err) {
     console.log(err);
   }

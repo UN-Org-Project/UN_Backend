@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 // Using Schema constructor, create ParentSchema
 var ParentSchema = new Schema({
-  parentName: {
+  name: {
     type: String,
     required: true
   },
@@ -30,7 +30,7 @@ var ParentSchema = new Schema({
     required: true
   },
   allStudents: [
-    Object, //this for tell db we want store students as objects
+    //this for tell db we want store students as objects
     {
       type: Schema.Types.ObjectId,
       ref: "Student"

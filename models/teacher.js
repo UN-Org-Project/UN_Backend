@@ -7,42 +7,46 @@ var Schema = mongoose.Schema;
 var TeacherSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   userName: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   emailAdress: {
     type: String,
-    required: true,
+    required: true
   },
   telepohoneNumber: {
     type: String,
-    required: true,
+    required: true
   },
   gender: {
     type: String,
-    required: true,
+    required: true
   },
-  image: {
+  adress: {
     type: String,
-    required: true,
+    required: true
+  },
+  experiance: {
+    type: String,
+    required: true
   },
   class: {
     type: String,
-    required: true,
+    required: true
   },
   dateOfBirth: {
     type: String,
-    required: true,
+    required: true
   },
-  allStudents:[ 
-    Object,//this for tell db we want store students as objects
+  allStudents: [
+    //this for tell db we want store students as objects
     {
       type: Schema.Types.ObjectId,
       ref: "Student"
@@ -53,13 +57,12 @@ var TeacherSchema = new Schema({
     required: true
   }
   //students: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Student",
-    //   },
-    // ],
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "Student",
+  //   },
+  // ],
 });
 
 // Create model from the schema
 module.exports = mongoose.model("Teacher", TeacherSchema);
-

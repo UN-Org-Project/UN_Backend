@@ -42,34 +42,18 @@ exports.postCreatParent = (req, res) => {
   const {
     studentName,
     Gender,
-    image,
+    adress,
     dateOfBirth,
     className,
     parentName,
     emailAdress,
     telephonNumber
   } = req.body;
-  if (
-    !studentName ||
-    !Gender ||
-    !image ||
-    !dateOfBirth ||
-    !className ||
-    !parentName ||
-    !emailAdress ||
-    !telephonNumber
-  ) {
-    const error = new Error(
-      "Some input are missing! check the input and try again"
-    );
-    error.statuscode = 422;
-    throw error;
-  }
-  const userName = generateUsername("P@", emailAdress);
 
-  const password = generatePassword("P", 11);
-
+  const userName = generateUsername("P_", emailAdress);
+  const password = generatePassword("P", 7);
   const state = "Parent";
+
   Parent.find({ emailAdress: emailAdress, telepohoneNumber: telephonNumber })
     .then(async (parent) => {
       if (parent.length == 0) {
@@ -77,7 +61,7 @@ exports.postCreatParent = (req, res) => {
         const student = new Student({
           studentName: studentName,
           gender: Gender,
-          image: image,
+          adress: adress,
           dateOfBirth: dateOfBirth,
           class: className 
         });
@@ -87,7 +71,7 @@ exports.postCreatParent = (req, res) => {
             .hash(password, 12)
             .then((hashedPw) => {
               const addparent = new Parent({
-                parentName: parentName,
+                name: parentName,
                 userName: userName,
                 password: hashedPw,
                 emailAdress: emailAdress,
@@ -96,14 +80,34 @@ exports.postCreatParent = (req, res) => {
                 allStudents: student_1._id,
                 state: state
               });
+
               return addparent.save();
             })
             .then(async (parent) => {
+              console.log(parent);
+
+              //*****add teacher_id reference in student
+              Teacher.findOne({ class: className })
+
+                .then((teacher) => {
+                  if (!teacher) {
+                    student_1.parent_id = parent._id;
+                    return student_1.save();
+                  } else {
+                    teacher.allStudents.push(student_1._id);
+                    student_1.teacher_id = teacher._id;
+                    teacher.save();
+                    student_1.parent_id = parent._id;
+                    return student_1.save();
+                  }
+                })
+                .catch((err) => console.log(err));
+
               const result_1 = await transporter.sendMail({
                 to: parent.emailAdress,
                 from: "ilovesyria898testnode@gmail.com",
                 subject: "Student Tracking System",
-                html: `<h2>Hello ${parent.parentName} <br> </h2> 
+                html: `<h2>Hello ${parent.name} <br> </h2> 
                  <h3>  <br> username : ${userName} <br> password: ${password}</h3>
                  <h4>This is your information so that you can log in to your website to track
                   your children's academic performance on the following website: 
@@ -116,48 +120,59 @@ exports.postCreatParent = (req, res) => {
               });
             });
         } catch (err) {
-          if (!err.statuscode) {
-            err.statuscode = 500;
-          }
-          next(err);
+          return res.status(404).json({
+            message: "some thing error"
+          });
         }
       } else {
         const student = new Student({
           studentName: studentName,
           gender: Gender,
-          image: image,
+          adress: adress,
           dateOfBirth: dateOfBirth,
           class: className
         });
+        //****** * add teacher_id reference in stuedent
+        Teacher.findOne({ class: className })
+
+          .then((teacher) => {
+            if (!teacher) {
+              student.parent_id = parent[0]._id;
+              return student.save();
+            } else {
+              teacher.allStudents.push(student._id);
+              student.teacher_id = teacher._id;
+              teacher.save();
+
+              return student.save();
+            }
+          })
+          .catch((err) => console.log(err));
         try {
-          const student_3 = await student.save();
+          // const student_3 = await student.save();
           const result_2 = await Parent.findOneAndUpdate(
             { emailAdress: emailAdress },
             {
-              $push: { allStudents: student_3._id }
+              $push: { allStudents: student._id }
             },
             { new: true }
           );
           return res.status(200).json({
             message:
               "the parent is excest the student become involved the parent",
-            StudentId: student_3._id
+            StudentId: student._id
           });
         } catch (err) {
-          if (!err.statuscode) {
-            err.statuscode = 500;
-          }
-          next(err);
+          console.log(err);
         }
       }
     })
     .catch((err) => {
-      if (!err.statuscode) {
-        err.statuscode = 500;
-      }
-      next(err);
+      console.log(err);
     });
 };
+
+// add teacher in DB
 
 exports.postCreatTeacher = (req, res) => {
   const name = req.body.name;
@@ -165,12 +180,13 @@ exports.postCreatTeacher = (req, res) => {
   const emailAdress = req.body.emailAdress;
   const telepohoneNumber = req.body.telepohoneNumber;
   const gender = req.body.gender;
-  const image = req.body.image;
+  const adress = req.body.adress;
+  const experiance = req.body.experiance;
   const _class = req.body.class;
   const dateOfBirth = req.body.dateOfBirth;
   const state = "Teacher";
-  const userName = generateUsername("t@", emailAdress);
-  const password = generatePassword("t@", 8);
+  const userName = generateUsername("T_", emailAdress);
+  const password = generatePassword("T", 7);
 
   bcrypt
     .hash(password, 12)
@@ -182,7 +198,8 @@ exports.postCreatTeacher = (req, res) => {
         emailAdress: emailAdress,
         telepohoneNumber: telepohoneNumber,
         gender: gender,
-        image: image,
+        adress: adress,
+        experiance: experiance,
         class: _class,
         dateOfBirth: dateOfBirth,
         state: state
@@ -192,7 +209,7 @@ exports.postCreatTeacher = (req, res) => {
           students.forEach((student) => {
             teacher.allStudents.push(student._id);
           });
-          return teacher;
+          return teacher.save();
         })
         .then(async (teacher) => {
           const result_1 = await transporter.sendMail({
@@ -210,12 +227,21 @@ exports.postCreatTeacher = (req, res) => {
           return teacher;
         })
         .then((teacher) => {
+          Student.find({ class: teacher.class })
+            .then((students) => {
+              students.forEach((student) => {
+                student.teacher_id = teacher._id;
+                student.save();
+              });
+              return teacher;
+            })
+            .catch((err) => console.log(err));
           return teacher.save();
         })
-        .then((result) => {
+        .then((teacher) => {
           res
             .status(200)
-            .json({ message: "Teacher created!", teacherId: result._id });
+            .json({ message: "Teacher created!", teacherId: teacher._id });
         });
     })
     .catch((err) => console.log(err));
