@@ -45,20 +45,22 @@ exports.login = async (req, res, next) => {
     // );
     //res.status(200).json({ loadedUser: loadedUser });
     //7a982130-a74a-4f66-bcc2-6a0b102fdff0
+
+    //chating ApI
     try {
-      const r = await axios.put(
-        "https://api.chatengine.io/users/",
-        {
-          username: loadedUser._id.toString(),
-          secret: loadedUser.userName,
-          first_name: loadedUser.name
-        },
-        { headers: { "Private-Key": "7a982130-a74a-4f66-bcc2-6a0b102fdff0" } }
-      );
+      // const r = await axios.put(
+      //   "https://api.chatengine.io/users/",
+      //   {
+      //     username: loadedUser._id.toString(),
+      //     secret: loadedUser.userName,
+      //     first_name: loadedUser.name
+      //   },
+      //   { headers: { "Private-Key": "7a982130-a74a-4f66-bcc2-6a0b102fdff0" } }
+      // );
       res.status(200).json({
         id: loadedUser._id,
-        state: loadedUser.state,
-        chating_username: r.data
+        state: loadedUser.state
+        // chating_username: r.data
       });
     } catch (e) {
       console.log(e);

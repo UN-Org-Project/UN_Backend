@@ -4,10 +4,11 @@ const Student = require("../models/student");
 const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const mongoose = require("mongoose");
 const existingUsernames = [];
 const existingpassword = [];
 //const sendgridtransport = require("nodemailer-sendgrid-transport");
-const transporter =nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
@@ -39,17 +40,28 @@ exports.addAdmin = (req, res, next) => {
 
 //add parent and student in DB
 exports.postCreatParent = (req, res) => {
-  const {
-    studentName,
-    Gender,
-    adress,
-    dateOfBirth,
-    className,
-    parentName,
-    emailAdress,
-    telephonNumber
-  } = req.body;
+  console.log(req.body);
+  const formData = req.body; // Access the form data as key-value pairs in the formData object
+  const studentName = formData.Data.studentName;
+  const Gender = formData.Data.Gender;
+  const parentName = formData.Data.parentName;
+  const dateOfBirth = formData.Data.dateOfBirth;
+  const emailAdress = formData.Data.emailAdress;
+  const className = formData.Data.className;
+  const telephonNumber = formData.Data.telephonNumber;
+  const adress = formData.Data.adress;
+  // const {
+  //   studentName,
+  //   Gender,
+  //   adress,
+  //   dateOfBirth,
+  //   className,
+  //   parentName,
+  //   emailAdress,
+  //   telephonNumber
+  // } = req.body;
 
+  console.log(req.body.studentName);
   const userName = generateUsername("P_", emailAdress);
   const password = generatePassword("P", 7);
   const state = "Parent";
@@ -63,7 +75,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className 
+          class: className
         });
         try {
           const student_1 = await student.save();
@@ -120,9 +132,10 @@ exports.postCreatParent = (req, res) => {
               });
             });
         } catch (err) {
-          return res.status(404).json({
-            message: "some thing error"
-          });
+          console.log(err);
+          // return res.status(404).json({
+          //   message: "some thing error"
+          // });
         }
       } else {
         const student = new Student({
@@ -175,15 +188,15 @@ exports.postCreatParent = (req, res) => {
 // add teacher in DB
 
 exports.postCreatTeacher = (req, res) => {
-  const name = req.body.name;
-
-  const emailAdress = req.body.emailAdress;
-  const telepohoneNumber = req.body.telepohoneNumber;
-  const gender = req.body.gender;
-  const adress = req.body.adress;
-  const experiance = req.body.experiance;
-  const _class = req.body.class;
-  const dateOfBirth = req.body.dateOfBirth;
+  console.log(req.body);
+  const name = req.body.Data.name;
+  const emailAdress = req.body.Data.emailAdress;
+  const telepohoneNumber = req.body.Data.telepohoneNumber;
+  const gender = req.body.Data.gender;
+  const adress = req.body.Data.adress;
+  const experiance = req.body.Data.experiance;
+  const _class = req.body.Data._class;
+  const dateOfBirth = req.body.Data.dateOfBirth;
   const state = "Teacher";
   const userName = generateUsername("T_", emailAdress);
   const password = generatePassword("T", 7);
@@ -247,6 +260,21 @@ exports.postCreatTeacher = (req, res) => {
     .catch((err) => console.log(err));
 };
 
+exports.getAdminInfo = (req, res, next) => {
+  const id = req.params.id;
+  console.log(id);
+  const _id = mongoose.Types.ObjectId(id);
+  Teacher.findById(_id)
+    .then((Admin) => {
+      console.log(Admin);
+      if (!Admin) {
+        return res.json({ message: "not found" });
+      }
+      return res.message({ adminName: Admin.name });
+    })
+    .catch((err) => console.log(err));
+};
+
 // unique password
 function generatePassword(type, length) {
   const charset =
@@ -268,10 +296,9 @@ function generatePassword(type, length) {
 //unique userName
 
 function generateUsername(type, email) {
-  const validChars = /[^\w]/gi;
-  const username = email.replace(validChars, "");
+  const username = email;
 
-  let baseName = username.split("gmail")[0];
+  let baseName = username.split("@")[0];
 
   let uniqueName = baseName;
   let suffix = 1;

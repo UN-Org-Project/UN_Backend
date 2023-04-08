@@ -6,5 +6,6 @@ const adminControler = require("../controllers/Admin");
 router.post("/admin", adminControler.addAdmin);
 router.post("/parent", adminControler.postCreatParent);
 router.post("/teacher", adminControler.postCreatTeacher);
+router.get("/getAdmininfo/:id", adminControler.getAdminInfo);
 
 module.exports = router;
