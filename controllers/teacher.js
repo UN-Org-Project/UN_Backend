@@ -158,6 +158,24 @@ exports.addtypeExam = (req, res, next) => {
     });
 };
 
+exports.sendInfo = (req, res, next) => {
+  const teacherId = req.params.teacherId;
+  Teacher.findOne({ _id: teacherId })
+    .then((dbTeacher) => {
+      return dbTeacher
+        .populate({
+          path: "allStudents",
+        })
+        .then((dbTeacher) => {
+          res.json(dbTeacher);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+};
+
 // exports.addAbsence = (req, res, next) => {
 //   const absence = req.body.absence;
 //   console.log(absence);
