@@ -199,7 +199,7 @@ exports.postCreatTeacher = (req, res) => {
   const dateOfBirth = req.body.Data.dateOfBirth;
   const state = "Teacher";
   const userName = generateUsername("T_", emailAdress);
-  const password = generatePassword("T", 7);
+  const password = generatePassword("T", 4);
 
   bcrypt
     .hash(password, 12)
@@ -277,8 +277,8 @@ exports.getAdminInfo = (req, res, next) => {
 
 // unique password
 function generatePassword(type, length) {
-  const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGH012345678912346758900099837465253226728435advfgdfghrfdds1122345566";
+  const charset = "123456789";
+  // "abcdefghijklmnopqrstuvwxyzABCDEFGH012345678912346758900099837465253226728435advfgdfghrfdds1122345566";
   let password = "";
   let suffix = 1;
   for (let i = 0; i < length; i++) {

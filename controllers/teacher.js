@@ -2,6 +2,7 @@ const Teacher = require("../models/teacher");
 const Student = require("../models/student");
 const bcrypt = require("bcryptjs");
 const student = require("../models/student");
+const mongoose = require("mongoose");
 
 exports.getAllTeachers = (req, res, next) => {
   Teacher.find({})
@@ -25,6 +26,7 @@ exports.getNumberOfAllTeachers = (req, res) => {
 
 // from here
 exports.add_Abs_Note_Rate = (req, res, next) => {
+  console.log(req.body);
   const absence = req.body.absence;
   const note = req.body.note;
   const star = req.body.rate;
@@ -33,13 +35,13 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
     //here if we add a new absence should we call getTotalRate ?
     .then((dbStudent) => {
       dbStudent.absence.push({
-        absecnceState: absence,
+        absecnceState: absence
       });
       dbStudent.notes.push({
-        note: note,
+        note: note
       });
       dbStudent.dalyRate.push({
-        star: star,
+        star: star
       });
       dbStudent.save();
     })
@@ -90,6 +92,7 @@ exports.getStudentLevelRate = (req, res, next) => {
 // };
 
 exports.addtypeExam = (req, res, next) => {
+  console.log(req.body);
   const { type, subject, mark, note, rate } = req.body;
   Student.findOne({ _id: "641f86931b84d5b8d28ad010" })
     .then((dbStudent) => {
@@ -159,14 +162,19 @@ exports.addtypeExam = (req, res, next) => {
 };
 
 exports.sendInfo = (req, res, next) => {
-  const teacherId = req.params.teacherId;
-  Teacher.findOne({ _id: teacherId })
+  const teacherId = req.params.id;
+  const _id = new mongoose.Types.ObjectId(teacherId);
+  Teacher.findOne({ _id: _id })
     .then((dbTeacher) => {
+      if (!dbTeacher) {
+        console.log("no Teacher");
+      }
       return dbTeacher
         .populate({
-          path: "allStudents",
+          path: "allStudents"
         })
         .then((dbTeacher) => {
+          console.log(dbTeacher);
           res.json(dbTeacher);
         });
     })
