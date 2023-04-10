@@ -263,14 +263,14 @@ exports.postCreatTeacher = (req, res) => {
 exports.getAdminInfo = (req, res, next) => {
   const id = req.params.id;
   console.log(id);
-  const _id = mongoose.Types.ObjectId(id);
-  Teacher.findById(_id)
+  const _id = new mongoose.Types.ObjectId(id);
+  Admin.findById(_id)
     .then((Admin) => {
       console.log(Admin);
       if (!Admin) {
         return res.json({ message: "not found" });
       }
-      return res.message({ adminName: Admin.name });
+      return res.json({ adminName: Admin.name });
     })
     .catch((err) => console.log(err));
 };
