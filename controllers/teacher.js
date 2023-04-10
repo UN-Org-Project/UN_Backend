@@ -159,8 +159,8 @@ exports.addtypeExam = (req, res, next) => {
 };
 
 exports.sendInfo = (req, res, next) => {
-  const teacherId = req.params.teacherId;
-  Teacher.findOne({ _id: teacherId })
+  const id = req.params.id;
+  Teacher.findOne({ _id: id })
     .then((dbTeacher) => {
       return dbTeacher
         .populate({
