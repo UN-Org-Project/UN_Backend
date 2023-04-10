@@ -25,14 +25,12 @@ var StudentSchema = new Schema({
 
   studentLevelRate: Number,
 
-  studentLevelRate: Number,
-
   class: {
     type: String,
     required: true
   },
 
-  behavior: String,
+  // behavior: String,
 
   notes: [
     {
