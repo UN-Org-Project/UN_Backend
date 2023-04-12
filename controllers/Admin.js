@@ -155,6 +155,7 @@ exports.postCreatParent = (req, res) => {
             } else {
               teacher.allStudents.push(student._id);
               student.teacher_id = teacher._id;
+              student.parent_id = parent[0]._id;
               teacher.save();
 
               return student.save();
