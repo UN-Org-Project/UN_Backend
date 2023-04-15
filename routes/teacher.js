@@ -11,7 +11,9 @@ router.get("/getNumberOfAllTeachers", teacherController.getNumberOfAllTeachers);
 // router.post('/addNotes',teacherController.addNotes)
 router.post("/add_Abs_Note_Rate", teacherController.add_Abs_Note_Rate);
 // router.get('/getTotalStudentAbs',teacherController.getTotalStudentAbs)
-router.get("/getStudentLevelRate", teacherController.getStudentLevelRate);
+
+// router.get("/getStudentLevelRate", teacherController.getStudentLevelRate);
+
 // router.post('/addAbsence',teacherController.addAbsence)
 // router.post('/addDalyRate',teacherController.addDalyRate)
 router.post("/addtypeExam", teacherController.addtypeExam);
