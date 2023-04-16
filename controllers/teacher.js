@@ -219,7 +219,9 @@ exports.sendInfo = (req, res, next) => {
       }
       return dbTeacher
         .populate({
-          path: "allStudents"
+          path: "allStudents",
+          select:
+            "_id studentName gender  dateOfBirth parent_id class teacher_id dalyRate studentLevelRate absence"
         })
         .then((dbTeacher) => {
           console.log(dbTeacher);
@@ -232,24 +234,26 @@ exports.sendInfo = (req, res, next) => {
     });
 };
 
-exports.sendInfo = (req, res, next) => {
-  const id = req.params.id;
-  Teacher.findOne({ _id: id })
-    .then((dbTeacher) => {
-      if (!dbTeacher) {
-        console.log("no Teacher");
-      }
-      return dbTeacher
-        .populate({
-          path: "allStudents"
-        })
-        .then((dbTeacher) => {
-          console.log(dbTeacher);
-          res.json(dbTeacher);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-};
+// exports.sendInfo = (req, res, next) => {
+//   const id = req.params.id;
+//   Teacher.findOne({ _id: id })
+//     .then((dbTeacher) => {
+//       if (!dbTeacher) {
+//         console.log("no Teacher");
+//       }
+//       return dbTeacher
+//         .populate({
+//           path: "allStudents",
+//           select: "_id studentName gender  dateOfBirth parent_id class teacher_id dalyRate"
+
+//         })
+//         .then((dbTeacher) => {
+//           console.log(dbTeacher);
+//           res.json(dbTeacher);
+//         });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({ error: err });
+//     });
+// };

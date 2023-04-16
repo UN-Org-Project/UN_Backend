@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const { getAllStudents } = require("./student");
 const student = require("../models/student");
 
-
 exports.getAllParents = (req, res) => {
   Parent.find({})
     .then((dbParents) => {
@@ -46,16 +45,22 @@ exports.getAllParents = (req, res) => {
 
 // };
 exports.getParentInfo = (req, res, next) => {
-  const parent_id = req.params._id;
+  const parent_id = req.params.id;
+  console.log(parent_id);
   Parent.findOne({ _id: parent_id })
     .populate({
-      path: "allStudents",
-      select: "studentName image dateOfBirth class teacher_id studentLevelRate"
+      path: "allStudents"
     })
     .then((parent) => {
-      res
-        .status(200)
-        .json({ parentName: parent.parentName, students: parent.allStudents });
+      console.log(parent);
+      // console.log(parent.allStudents);
+      // parent.allStudents.forEach((student) => {
+      //   student.populate({
+      //     path: "teacher_id"
+      //   });
+      //   console.log(student);
+      // });
+      res.status(200).json({ parentInfo: parent });
     })
     .catch((err) => {
       return res.status(404).json({
@@ -122,3 +127,4 @@ exports.getNumberOfAllParents = (req, res) => {
     });
 };
 
+function populateTeacher(allStudents) {}

@@ -222,6 +222,8 @@ exports.postCreatTeacher = (req, res) => {
         .then((students) => {
           students.forEach((student) => {
             teacher.allStudents.push(student._id);
+            student.teacher_id = teacher._id;
+            student.save();
           });
           return teacher.save();
         })
