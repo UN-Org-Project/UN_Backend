@@ -11,6 +11,6 @@ const pdfController = require("../reports/sendPdf");
 // Route to get all Parents
 //router.get("/parents", parentController.getAllParents);
 
-//router.get('/getPdfDoc', pdfController.getPdfDoc);
+router.get('/getPdfDoc', pdfController.getPdfDoc);
 
 module.exports = router;
