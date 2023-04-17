@@ -57,7 +57,7 @@ exports.login = async (req, res, next) => {
       //   },
       //   { headers: { "Private-Key": "7a982130-a74a-4f66-bcc2-6a0b102fdff0" } }
       // );
-      res.status(200).json({
+      return res.status(200).json({
         id: loadedUser._id,
         state: loadedUser.state
         // chating_username: r.data

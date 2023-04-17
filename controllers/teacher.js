@@ -31,19 +31,19 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
     .then((dbTeacher) => {
       dbTeacher
         .populate({
-          path: "allStudents",
+          path: "allStudents"
         })
         .then((dbTeacher) => {
           dbTeacher.allStudents.forEach((student, index) => {
             student.absence.push({
-              absecnceState: body[index].absence,
+              absecnceState: body[index].absence
             });
             student.notes.push({
-              note: body[index].note,
+              note: body[index].note
             });
 
             student.dalyRate.push({
-              star: body[index].level,
+              star: body[index].level
             });
              getStudentLevelRate(student._id);
             student.save();
@@ -102,7 +102,7 @@ exports.addtypeExam = (req, res, next) => {
     .then((dbTeacher) => {
       dbTeacher
         .populate({
-          path: "allStudents",
+          path: "allStudents"
         })
         .then((dbTeacher) => {
           dbTeacher.allStudents.forEach((student, index) => {
@@ -219,6 +219,8 @@ exports.sendInfo = (req, res, next) => {
       return dbTeacher
         .populate({
           path: "allStudents",
+          select:
+            "_id studentName gender  dateOfBirth parent_id class teacher_id dalyRate studentLevelRate absence"
         })
         .then((dbTeacher) => {
           console.log(dbTeacher);
@@ -231,24 +233,26 @@ exports.sendInfo = (req, res, next) => {
     });
 };
 
-exports.sendInfo = (req, res, next) => {
-  const id = req.params.id;
-  Teacher.findOne({ _id: id })
-    .then((dbTeacher) => {
-      if (!dbTeacher) {
-        console.log("no Teacher");
-      }
-      return dbTeacher
-        .populate({
-          path: "allStudents",
-        })
-        .then((dbTeacher) => {
-          console.log(dbTeacher);
-          res.json(dbTeacher);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-};
+// exports.sendInfo = (req, res, next) => {
+//   const id = req.params.id;
+//   Teacher.findOne({ _id: id })
+//     .then((dbTeacher) => {
+//       if (!dbTeacher) {
+//         console.log("no Teacher");
+//       }
+//       return dbTeacher
+//         .populate({
+//           path: "allStudents",
+//           select: "_id studentName gender  dateOfBirth parent_id class teacher_id dalyRate"
+
+//         })
+//         .then((dbTeacher) => {
+//           console.log(dbTeacher);
+//           res.json(dbTeacher);
+//         });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({ error: err });
+//     });
+// };
