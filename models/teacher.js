@@ -55,7 +55,9 @@ var TeacherSchema = new Schema({
   state: {
     type: String,
     required: true
-  }
+  },
+  allNotes: []
+
   //students: [
   //   {
   //     type: Schema.Types.ObjectId,

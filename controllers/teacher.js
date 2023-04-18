@@ -3,6 +3,7 @@ const Student = require("../models/student");
 const bcrypt = require("bcryptjs");
 const student = require("../models/student");
 const mongoose = require("mongoose");
+const lodash = require("lodash");
 
 exports.getAllTeachers = (req, res, next) => {
   Teacher.find({})
@@ -257,3 +258,80 @@ exports.sendInfo = (req, res, next) => {
 //       res.status(500).json({ error: err });
 //     });
 // };
+
+exports.getArrayofNotes = (req, res, next) => {
+  const id = req.params.id;
+  Teacher.findOne({ _id: id })
+    .then((teacher) => {
+      return res.json({ notes: teacher.allNotes, id: id });
+    })
+    .catch((err) => console.log(err));
+  // return res.json({ notes: notes, id: id });
+};
+exports.addNotes = (req, res, next) => {
+  const id = req.params.id;
+  const updateNotes = req.body.note;
+
+  Teacher.findOne({ _id: id })
+    .then((teacher) => {
+      const allNotes = teacher.allNotes;
+      let uniqueSet = lodash.uniqBy([...allNotes, ...updateNotes], "id");
+      let NewNotes = Array.from(uniqueSet);
+      teacher.allNotes = NewNotes;
+
+      teacher.save();
+      //    console.log(teacher.allNotes);
+      teacher
+        .populate({
+          path: "allStudents"
+        })
+        .then((dbTeacher) => {
+          const notes = updateNotes[updateNotes.length - 1];
+          dbTeacher.allStudents.forEach((student) => {
+            student.allNotes.push({
+              notes: notes
+            });
+            student.save();
+            //        console.log(student.allNotes);
+          });
+        })
+        .catch((err) => console.log(err));
+
+      return res.json({ notes: teacher.allNotes, id: id });
+    })
+    .catch((err) => console.log(err));
+
+  //console.log(uniqueSet);
+};
+
+exports.deleteNote = (req, res, nex) => {
+  const id = req.params.id;
+  const noteId = req.body.id;
+  Teacher.findOne({ _id: id })
+    .then((teacher) => {
+      const allNotes = teacher.allNotes;
+      teacher.allNotes = allNotes.filter((note) => note.id != noteId);
+      teacher.save();
+      //    console.log(teacher.allNotes);
+      teacher
+        .populate({
+          path: "allStudents"
+        })
+        .then((dbTeacher) => {
+          dbTeacher.allStudents.forEach((student, index) => {
+            student.allNotes = student.allNotes.filter(
+              (note) => note.notes.id != noteId
+            );
+            student.save();
+            //        console.log(student.allNotes);
+          });
+        })
+        .catch((err) => console.log(err));
+      return res.json({ notes: teacher.allNotes, id: id });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  // notes = notes.filter((note) => note.id != noteId);
+  // console.log(notes);
+};

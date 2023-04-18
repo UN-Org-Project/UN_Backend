@@ -46,7 +46,13 @@ var StudentSchema = new Schema({
       _id: false
     }
   ],
-
+  allNotes: [
+    {
+      notes: Object,
+      noteDate: { type: Date, default: Date.now() },
+      _id: false
+    }
+  ],
   dalyRate: [
     {
       star: Number,
