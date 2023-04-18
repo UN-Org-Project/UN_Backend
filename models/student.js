@@ -5,19 +5,19 @@ var Schema = mongoose.Schema;
 var StudentSchema = new Schema({
   studentName: {
     type: String,
-    required: true
+    required: true,
   },
   gender: {
     type: String,
-    required: true
+    required: true,
   },
   adress: {
     type: String,
-    required: true
+    required: true,
   },
   dateOfBirth: {
     type: String,
-    required: true
+    required: true,
   },
   stars: Number,
 
@@ -27,7 +27,7 @@ var StudentSchema = new Schema({
 
   class: {
     type: String,
-    required: true
+    required: true,
   },
 
   // behavior: String,
@@ -36,15 +36,15 @@ var StudentSchema = new Schema({
     {
       note: String,
       noteDate: { type: Date, default: Date.now() },
-      _id: false //this for stop creating auto _id
-    }
+      _id: false, //this for stop creating auto _id
+    },
   ],
   absence: [
     {
       absecnceState: String,
       abcenceDate: { type: Date, default: Date.now() },
-      _id: false
-    }
+      _id: false,
+    },
   ],
   allNotes: [
     {
@@ -56,8 +56,8 @@ var StudentSchema = new Schema({
   dalyRate: [
     {
       star: Number,
-      _id: false
-    }
+      _id: false,
+    },
   ],
 
   typeExam: {
@@ -66,107 +66,107 @@ var StudentSchema = new Schema({
         math: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         arbic: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         history: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         english: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         science: {
           mark: String,
           note: String,
-          star: Number
-        }
-      }
+          star: Number,
+        },
+      },
     },
     second: {
       subjects: {
         math: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         arbic: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         history: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         english: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         science: {
           mark: String,
           note: String,
-          star: Number
-        }
-      }
+          star: Number,
+        },
+      },
     },
     final: {
       subjects: {
         math: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         arbic: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         history: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         english: {
           mark: String,
           note: String,
-          star: Number
+          star: Number,
         },
         science: {
           mark: String,
           note: String,
-          star: Number
-        }
-      }
+          star: Number,
+        },
+      },
     },
 
-    _id: false
+    _id: false,
   },
 
   id: {
-    type: Schema.Types.ObjectId //this for tell database create _id for the student
+    type: Schema.Types.ObjectId, //this for tell database create _id for the student
   },
   teacher_id:
     //this for tell db we want store students as objects
     {
       type: Schema.Types.ObjectId,
-      ref: "Teacher"
+      ref: "Teacher",
     },
   parent_id:
     //this for tell db we want store students as objects
     {
       type: Schema.Types.ObjectId,
-      ref: "Parent"
-    }
+      ref: "Parent",
+    },
 });
 
 module.exports = mongoose.model("Student", StudentSchema);

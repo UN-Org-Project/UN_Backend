@@ -46,7 +46,7 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
             student.dalyRate.push({
               star: body[index].level
             });
-            getStudentLevelRate(student._id);
+             getStudentLevelRate(student._id);
             student.save();
           });
           dbTeacher.save();
@@ -65,16 +65,15 @@ getStudentLevelRate = (id) => {
   let numOfStars = 0;
   Student.findOne({ _id: id })
     .then((dbStudent) => {
-      // studentLevelRate = dbStudent.dalyRate[0].star
       dbStudent.dalyRate.forEach((s) => {
         numOfStars++;
         return (sum += s.star);
       });
+      
       sum /= numOfStars;
-      sum *= 20;
+      sum *= 20; 
       dbStudent.studentLevelRate = Math.trunc(sum);
       dbStudent.save();
-      // console.log(dbStudent.studentLevelRate);
     })
 
     .catch((err) => {
