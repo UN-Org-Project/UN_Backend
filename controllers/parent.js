@@ -47,20 +47,21 @@ const student = require("../models/student");
 // };
 exports.getParentInfo = (req, res, next) => {
   const parent_id = req.params.id;
-  console.log(parent_id);
   Parent.findOne({ _id: parent_id })
     .populate({
       path: "allStudents"
     })
     .then((parent) => {
-      console.log(parent);
-      // console.log(parent.allStudents);
-      // parent.allStudents.forEach((student) => {
-      //   student.populate({
-      //     path: "teacher_id"
-      //   });
-      //   console.log(student);
-      // });
+      parent.allStudents.forEach((student) => {
+        student
+          .populate({
+            path: "teacher_id"
+          })
+          .then((student) => {
+            student.teacherName = student.teacher_id.name;
+            student.save();
+          });
+      });
       res.status(200).json({ parentInfo: parent });
     })
     .catch((err) => {
