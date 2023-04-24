@@ -19,21 +19,26 @@ exports.getPdfDoc = (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename= report.pdf");
 
-    const pdfPath = path.join(__dirname + "/pdfs", "report.pdf");
-    const imagePath = path.join(__dirname + "/images", "st2.jpg");
+    // var pdfPath = path.join(__dirname + "/pdfs", "report.pdf");
+    var imagePath = path.join(__dirname + "/images", "st2.jpg");
 
-    const stream = fs.createWriteStream(pdfPath);
     // JUST I WANT ID TEACHER HERE..
     // const teacherId = req.body.id;
-    Teacher.findOne({ _id: "6431b22ca8514ea551212e27" })
-      .then((dbTeacher) => {
-        dbTeacher
-          .populate({
-            path: "allStudents",
-          })
-          .then((dbTeacher) => {
-            dbTeacher.allStudents.forEach((student) => {
-              Student.findOne({ _id: student._id }).then((dbStudent) => {
+    Teacher.findOne({ _id: "6431b22ca8514ea551212e27" }).then((dbTeacher) => {
+      dbTeacher
+        .populate({
+          path: "allStudents",
+        })
+        .then((dbTeacher) => {
+          dbTeacher.allStudents.forEach((student, index) => {
+            var pdfPath = path.join(__dirname + "/pdfs", `report-${index}.pdf`);
+            var stream = fs.createWriteStream(pdfPath);
+
+            fs.writeFileSync(pdfPath, "hello");
+
+            Student.findOne({ _id: student._id }).then((dbStudent) => {
+              const parentId = dbStudent.parent_id;
+              Parent.findOne({ _id: parentId }).then((dbParent) => {
                 const defaultOptions = {
                   margins: { top: 50, left: 100, right: 100, bottom: 10 },
                   size: "A4",
@@ -410,46 +415,25 @@ exports.getPdfDoc = (req, res) => {
                 pdfDoc.pipe(stream);
                 pdfDoc.end();
 
-                stream.on("finish", () => {
-                  res.sendFile(pdfPath);
-
-                  // Send to the parent Email
-                  const parentId = dbStudent.parent_id;
-
-                  Parent.findOne({ _id: parentId })
-                    .then((dbParent) => {
-                      // console.log(dbParent);
-
-                      transporter.sendMail({
-                        to: dbParent.emailAdress,
-                        from: "ilovesyria898testnode@gmail.com",
-                        subject: "Student Tracking System",
-                        html: `It's a monthlly report`,
-                        attachments: [
-                          {
-                            filename: "Report.pdf",
-                            path: pdfPath,
-                            contentType: "application/pdf",
-                          },
-                        ],
-                      });
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
+                transporter.sendMail({
+                  to: dbParent.emailAdress,
+                  from: "ilovesyria898testnode@gmail.com",
+                  subject: "Student Tracking System",
+                  html: `It's a monthlly report`,
+                  attachments: [
+                    {
+                      filename: `report-${index}.pdf`,
+                      path: pdfPath,
+                      contentType: "application/pdf",
+                    },
+                  ],
                 });
-              });
-            });
+              })
+            })
+            res.sendFile(pdfPath);
           });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    stream.on("error", (err) => {
-      console.error(err);
-      res.status(500).send("Failed to send pdf.");
-    });
+        });
+    })
   } catch (error) {
     console.log(error);
     res.status(500).send("server error occured");
