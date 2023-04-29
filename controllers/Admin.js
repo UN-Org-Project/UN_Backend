@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
-    pass: "pmuojgznqazvmwmp"
-  }
+    pass: "pmuojgznqazvmwmp",
+  },
 });
 
 //Added astatic Admin to manage the process for add teacher and add parent
@@ -28,7 +28,7 @@ exports.addAdmin = (req, res, next) => {
         userName: "muath",
         password: password,
         emailAdress: email,
-        state: "Admin"
+        state: "Admin",
       });
       return admin.save();
     })
@@ -75,7 +75,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         try {
           const student_1 = await student.save();
@@ -90,7 +90,7 @@ exports.postCreatParent = (req, res) => {
                 telepohoneNumber: telephonNumber,
                 numberOfChildren: 1,
                 allStudents: student_1._id,
-                state: state
+                state: state,
               });
 
               return addparent.save();
@@ -124,11 +124,11 @@ exports.postCreatParent = (req, res) => {
                  <h4>This is your information so that you can log in to your website to track
                   your children's academic performance on the following website: 
                   <a href="http://localhost:3000/login">Login</a> . </h4>
-                 `
+                 `,
               });
               return res.status(200).json({
                 message: "new Parent created!",
-                parentId: parent._id
+                parentId: parent._id,
               });
             });
         } catch (err) {
@@ -143,7 +143,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         //****** * add teacher_id reference in stuedent
         Teacher.findOne({ class: className })
@@ -167,14 +167,14 @@ exports.postCreatParent = (req, res) => {
           const result_2 = await Parent.findOneAndUpdate(
             { emailAdress: emailAdress },
             {
-              $push: { allStudents: student._id }
+              $push: { allStudents: student._id },
             },
             { new: true }
           );
           return res.status(200).json({
             message:
               "the parent is excest the student become involved the parent",
-            StudentId: student._id
+            StudentId: student._id,
           });
         } catch (err) {
           console.log(err);
@@ -216,7 +216,7 @@ exports.postCreatTeacher = (req, res) => {
         experiance: experiance,
         class: _class,
         dateOfBirth: dateOfBirth,
-        state: state
+        state: state,
       });
       Student.find({ class: teacher.class })
         .then((students) => {
@@ -238,7 +238,7 @@ exports.postCreatTeacher = (req, res) => {
             to add all the necessary information to track the academic performance 
             of your class students and the abiliyty to communocate with patents. on the following website: 
              <a href="http://localhost:3000/login">Login</a> . </h4>
-            `
+            `,
           });
           return teacher;
         })
@@ -313,3 +313,55 @@ function generateUsername(type, email) {
 
   return type + uniqueName;
 }
+
+exports.getAllStudents = (req, res) => {
+  Student.find({})
+    .then((dbStudents) => {
+      //console.log(dbStudents);
+      res.json(dbStudents);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+exports.deleteStudent = (req, res) => {
+  const id = req.params.id;
+  //   yaseennnnnnzzzzz898@gmail.com
+  Student.find({ _id: id })
+    .then((dbStudent) => {
+      const parentId = dbStudent[0].parent_id;
+
+      Parent.findOne({ _id: parentId })
+        .populate({
+          path: "allStudents",
+        })
+        .exec()
+        .then((parent) => {
+          const numStudents = parent.allStudents.length;
+
+          Student.deleteOne({ _id: id })
+            .then(() => {
+              console.log("Deleted successfully");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+          if (numStudents <= 1) {
+            Parent.deleteOne({ _id: parentId })
+              .then(() => {
+                res.json("parent deleted successfully");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
