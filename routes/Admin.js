@@ -7,5 +7,6 @@ router.post("/admin", adminControler.addAdmin);
 router.post("/parent", adminControler.postCreatParent);
 router.post("/teacher", adminControler.postCreatTeacher);
 router.get("/getAdmininfo/:id", adminControler.getAdminInfo);
-
+router.get('/getAllStudents',adminControler.getAllStudents)
+router.get('/deleteStudent/:id',adminControler.deleteStudent)
 module.exports = router;

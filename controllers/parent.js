@@ -1,19 +1,20 @@
 const bcrypt = require("bcryptjs");
 const Parent = require("../models/parent");
 const Student = require("../models/student");
+const Teacher = require("../models/teacher");
 const mongoose = require("mongoose");
 const { getAllStudents } = require("./student");
 const student = require("../models/student");
 
-exports.getAllParents = (req, res) => {
-  Parent.find({})
-    .then((dbParents) => {
-      res.json(dbParents);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-};
+// exports.getAllParents = (req, res) => {
+//   Parent.find({})
+//     .then((dbParents) => {
+//       res.json(dbParents);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// };
 
 // exports.postCreatParent = (req, res) => {
 
@@ -46,20 +47,21 @@ exports.getAllParents = (req, res) => {
 // };
 exports.getParentInfo = (req, res, next) => {
   const parent_id = req.params.id;
-  console.log(parent_id);
   Parent.findOne({ _id: parent_id })
     .populate({
       path: "allStudents"
     })
     .then((parent) => {
-      console.log(parent);
-      // console.log(parent.allStudents);
-      // parent.allStudents.forEach((student) => {
-      //   student.populate({
-      //     path: "teacher_id"
-      //   });
-      //   console.log(student);
-      // });
+      parent.allStudents.forEach((student) => {
+        student
+          .populate({
+            path: "teacher_id"
+          })
+          .then((student) => {
+            student.teacherName = student.teacher_id.name;
+            student.save();
+          });
+      });
       res.status(200).json({ parentInfo: parent });
     })
     .catch((err) => {
@@ -68,63 +70,61 @@ exports.getParentInfo = (req, res, next) => {
       });
     });
 };
-exports.getstudentInfo = (req, res, next) => {
-  const student_id = req.params._id;
-  Student.find({ _id: student_id })
-    .then((student) => {
-      return res.status(200).json({
-        absence: student.absence,
-        note: student.note,
-        dalyRate: student.dalyRate
-      });
-    })
-    .catch((err) => console.log(err));
-};
-exports.poststudentMarks = (req, res, next) => {
-  const student_id = req.pareams._id;
-  const typeExam = req.body.type;
-  student
-    .find({ _id: student_id })
-    .then((student) => {
-      if (typeExam === "first") {
-        if (student.typeExam.first.existFirst) {
-          return res.status(200).json({ marks: student.typeExam.first });
-        } else {
-          return res
-            .status(201)
-            .json({ message: "Exam marks have not been add yet" });
-        }
-      }
-      if (typeExam === "secound") {
-        if (student.typeExam.secound.existSecound) {
-          return res.status(200).json({ marks: student.typeExam.secound });
-        } else {
-          return res
-            .status(201)
-            .json({ message: "Exam marks have not been add yet" });
-        }
-      }
-      if (typeExam === "final") {
-        if (student.typeExam.final.existFinal) {
-          return res.status(200).json({ marks: student.typeExam.final });
-        } else {
-          return res
-            .status(201)
-            .json({ message: "Exam marks have not been add yet" });
-        }
-      }
-    })
-    .catch((err) => console.log(err));
-};
+// exports.getstudentInfo = (req, res, next) => {
+//   const student_id = req.params._id;
+//   Student.find({ _id: student_id })
+//     .then((student) => {
+//       return res.status(200).json({
+//         absence: student.absence,
+//         note: student.note,
+//         dalyRate: student.dalyRate
+//       });
+//     })
+//     .catch((err) => console.log(err));
+// };
+// exports.poststudentMarks = (req, res, next) => {
+//   const student_id = req.pareams._id;
+//   const typeExam = req.body.type;
+//   student
+//     .find({ _id: student_id })
+//     .then((student) => {
+//       if (typeExam === "first") {
+//         if (student.typeExam.first.existFirst) {
+//           return res.status(200).json({ marks: student.typeExam.first });
+//         } else {
+//           return res
+//             .status(201)
+//             .json({ message: "Exam marks have not been add yet" });
+//         }
+//       }
+//       if (typeExam === "secound") {
+//         if (student.typeExam.secound.existSecound) {
+//           return res.status(200).json({ marks: student.typeExam.secound });
+//         } else {
+//           return res
+//             .status(201)
+//             .json({ message: "Exam marks have not been add yet" });
+//         }
+//       }
+//       if (typeExam === "final") {
+//         if (student.typeExam.final.existFinal) {
+//           return res.status(200).json({ marks: student.typeExam.final });
+//         } else {
+//           return res
+//             .status(201)
+//             .json({ message: "Exam marks have not been add yet" });
+//         }
+//       }
+//     })
+//     .catch((err) => console.log(err));
+// };
 
-exports.getNumberOfAllParents = (req, res) => {
-  Parent.find({})
-    .then((dbParents) => {
-      return res.json(dbParents.length);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-};
-
-function populateTeacher(allStudents) {}
+// exports.getNumberOfAllParents = (req, res) => {
+//   Parent.find({})
+//     .then((dbParents) => {
+//       return res.json(dbParents.length);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// };
