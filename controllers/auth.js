@@ -12,9 +12,9 @@ exports.login = async (req, res, next) => {
   const password = req.body.password;
   let loadedUser;
   let Test;
-  if (password.charAt(0) == "T") {
+  if (password.charAt(0) == "t") {
     Test = Teacher;
-  } else if (password.charAt(0) == "P") {
+  } else if (password.charAt(0) == "p") {
     Test = Parent;
   } else {
     Test = Admin;

@@ -62,8 +62,8 @@ exports.postCreatParent = (req, res) => {
   // } = req.body;
 
   console.log(req.body.studentName);
-  const userName = generateUsername("P_", emailAdress);
-  const password = generatePassword("P", 7);
+  const userName = generateUsername("p", emailAdress);
+  const password = generatePassword("p", 7);
   const state = "Parent";
 
   Parent.find({ emailAdress: emailAdress, telepohoneNumber: telephonNumber })
@@ -199,8 +199,8 @@ exports.postCreatTeacher = (req, res) => {
   const _class = req.body.Data._class;
   const dateOfBirth = req.body.Data.dateOfBirth;
   const state = "Teacher";
-  const userName = generateUsername("T_", emailAdress);
-  const password = generatePassword("T", 4);
+  const userName = generateUsername("t", emailAdress);
+  const password = generatePassword("t", 4);
 
   bcrypt
     .hash(password, 12)
