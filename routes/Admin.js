@@ -9,4 +9,5 @@ router.post("/teacher", adminControler.postCreatTeacher);
 router.get("/getAdmininfo/:id", adminControler.getAdminInfo);
 router.get('/getAllStudents',adminControler.getAllStudents)
 router.get('/deleteStudent/:id',adminControler.deleteStudent)
+router.post('/sendStudentInfo',adminControler.sendStudentInfo)
 module.exports = router;

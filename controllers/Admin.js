@@ -12,10 +12,9 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
-    pass: "pmuojgznqazvmwmp"
-  }
+    pass: "pmuojgznqazvmwmp",
+  },
 });
-
 //Added astatic Admin to manage the process for add teacher and add parent
 exports.addAdmin = (req, res, next) => {
   const name = req.body.name;
@@ -28,7 +27,7 @@ exports.addAdmin = (req, res, next) => {
         userName: "muath",
         password: password,
         emailAdress: email,
-        state: "Admin"
+        state: "Admin",
       });
       return admin.save();
     })
@@ -61,11 +60,9 @@ exports.postCreatParent = (req, res) => {
   //   telephonNumber
   // } = req.body;
 
-  console.log(req.body.studentName);
   const userName = generateUsername("p", emailAdress);
   const password = generatePassword("p", 7);
   const state = "Parent";
-
   Parent.find({ emailAdress: emailAdress, telepohoneNumber: telephonNumber })
     .then(async (parent) => {
       if (parent.length == 0) {
@@ -75,7 +72,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         try {
           const student_1 = await student.save();
@@ -88,9 +85,10 @@ exports.postCreatParent = (req, res) => {
                 password: hashedPw,
                 emailAdress: emailAdress,
                 telepohoneNumber: telephonNumber,
+                //here why 1 is static ?
                 numberOfChildren: 1,
                 allStudents: student_1._id,
-                state: state
+                state: state,
               });
 
               return addparent.save();
@@ -124,11 +122,11 @@ exports.postCreatParent = (req, res) => {
                  <h4>This is your information so that you can log in to your website to track
                   your children's academic performance on the following website: 
                   <a href="http://localhost:3000/login">Login</a> . </h4>
-                 `
+                 `,
               });
               return res.status(200).json({
                 message: "new Parent created!",
-                parentId: parent._id
+                parentId: parent._id,
               });
             });
         } catch (err) {
@@ -143,7 +141,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         //****** * add teacher_id reference in stuedent
         Teacher.findOne({ class: className })
@@ -167,14 +165,14 @@ exports.postCreatParent = (req, res) => {
           const result_2 = await Parent.findOneAndUpdate(
             { emailAdress: emailAdress },
             {
-              $push: { allStudents: student._id }
+              $push: { allStudents: student._id },
             },
             { new: true }
           );
           return res.status(200).json({
             message:
               "the parent is excest the student become involved the parent",
-            StudentId: student._id
+            StudentId: student._id,
           });
         } catch (err) {
           console.log(err);
@@ -216,7 +214,7 @@ exports.postCreatTeacher = (req, res) => {
         experiance: experiance,
         class: _class,
         dateOfBirth: dateOfBirth,
-        state: state
+        state: state,
       });
       Student.find({ class: teacher.class })
         .then((students) => {
@@ -238,7 +236,7 @@ exports.postCreatTeacher = (req, res) => {
             to add all the necessary information to track the academic performance 
             of your class students and the abiliyty to communocate with patents. on the following website: 
              <a href="http://localhost:3000/login">Login</a> . </h4>
-            `
+            `,
           });
           return teacher;
         })
@@ -264,12 +262,10 @@ exports.postCreatTeacher = (req, res) => {
 };
 
 exports.getAdminInfo = (req, res, next) => {
-  const id = req.params.id;
-  console.log(id);
-  const _id = new mongoose.Types.ObjectId(id);
+  const _id = req.params.id;
+  // const _id = new mongoose.Types.ObjectId(id);
   Admin.findById(_id)
     .then((Admin) => {
-      console.log(Admin);
       if (!Admin) {
         return res.json({ message: "not found" });
       }
@@ -281,7 +277,6 @@ exports.getAdminInfo = (req, res, next) => {
 // unique password
 function generatePassword(type, length) {
   const charset = "123456789";
-  // "abcdefghijklmnopqrstuvwxyzABCDEFGH012345678912346758900099837465253226728435advfgdfghrfdds1122345566";
   let password = "";
   let suffix = 1;
   for (let i = 0; i < length; i++) {
@@ -318,51 +313,129 @@ exports.getAllStudents = (req, res) => {
   Student.find({})
     .populate({ path: "parent_id" })
     .then((dbStudents) => {
-      //console.log(dbStudents);
       res.json(dbStudents);
     })
     .catch((err) => {
       console.log(err);
     });
 };
-exports.deleteStudent = (req, res) => {
-  const id = req.params.id;
-  //   yaseennnnnnzzzzz898@gmail.com
-  Student.find({ _id: id })
-    .then((dbStudent) => {
-      const parentId = dbStudent[0].parent_id;
 
-      Parent.findOne({ _id: parentId })
-        .populate({
-          path: "allStudents"
-        })
-        .exec()
-        .then((parent) => {
-          const numStudents = parent.allStudents.length;
+exports.deleteStudent = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const dbStudent = await Student.find({ _id: id });
+    const parentId = dbStudent[0].parent_id;
 
-          Student.deleteOne({ _id: id })
-            .then(() => {
-              console.log("Deleted successfully");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+    const parent = await Parent.findOne({ _id: parentId })
+      .populate({
+        path: "allStudents",
+      })
+      .exec();
 
-          if (numStudents <= 1) {
-            Parent.deleteOne({ _id: parentId })
-              .then(() => {
-                res.json("parent deleted successfully");
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+    const numStudents = parent.allStudents.length;
+
+    await Teacher.updateOne(
+      { _id: dbStudent.teacher_id },
+      { $pull: { allStudents: id } }
+    );
+    await Parent.updateOne(
+      { _id: dbStudent.parent_id },
+      { $pull: { allStudents: id } }
+    );
+    await Student.deleteOne({ _id: id });
+    console.log("Deleted successfully");
+
+    if (numStudents <= 1) {
+      await Parent.deleteOne({ _id: parentId });
+      res.json("studnet and parent deleted successfully");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.sendStudentInfo = async (req, res, next) => {
+  try {
+    const data = req.body;
+
+    //Edit studentName, gender, adress, dateOfBirth
+    await Student.updateOne(
+      { _id: data._id },
+      {
+        $set: {
+          studentName: data.studentName,
+          gender: data.gender,
+          adress: data.adress,
+          dateOfBirth: data.dateOfBirth,
+        },
+      }
+    );
+
+    //Edit class
+    Student.findOne({ _id: data._id })
+      .then(async (dbStudent) => {
+        if (dbStudent.class != data.class) {
+          await Teacher.updateOne(
+            { _id: data.teacher_id },
+            { $pull: { allStudents: data._id } }
+          );
+          await Teacher.updateOne(
+            { class: data.class },
+            { $push: { allStudents: data._id } }
+          );
+          try {
+            const dbTeacher = await Teacher.findOne({ class: data.class });
+            const tId = dbTeacher._id;
+            await Student.updateOne(
+              { _id: data._id },
+              {
+                $set: {
+                  class: data.class,
+                  teacher_id: tId,
+                },
+              }
+            );
+          } catch (err) {
+            console.log(err);
           }
-        })
-        .catch((err) => {
-          console.log(err);
+        }
+      })
+      .catch((err) => console.log(err));
+    //Edite parent name
+    Parent.findOne({ _id: data.parent_id })
+      .then(async (dbParent) => {
+        if (data.name != dbParent.name) {
+          dbParent.name = data.name;
+        }
+        if (data.emailAdress != dbParent.emailAdress) {
+          dbParent.emailAdress = data.emailAdress;
+        }
+        if (data.telepohoneNumber != dbParent.telepohoneNumber) {
+          dbParent.telepohoneNumber = data.telepohoneNumber;
+        }
+
+        const updatePassword = generatePassword("p", 7);
+        const updateUserName = generateUsername("p", data.emailAdress);
+        bcrypt.hash(updatePassword, 12).then((hashedPw) => {
+          dbParent.password = hashedPw;
+          dbParent.userName = updateUserName;
         });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+        dbParent.save();
+        //Edit gmail
+        await transporter.sendMail({
+          to: dbParent.emailAdress,
+          from: "ilovesyria898testnode@gmail.com",
+          subject: "Student Tracking System",
+          html: `<h2>Hello ${dbParent.name} <br> </h2> 
+       <h3>  <br> username : ${updateUserName} <br> password: ${updatePassword}</h3>
+       <h4>This is your information so that you can log in to your website to track
+        your children's academic performance on the following website: 
+        <a href="http://localhost:3000/login">Login</a> . </h4>
+       `,
+        });
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    console.error(error);
+  }
 };
