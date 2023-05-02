@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
-    pass: "pmuojgznqazvmwmp",
-  },
+    pass: "pmuojgznqazvmwmp"
+  }
 });
 
 exports.getPdfDoc = (req, res) => {
@@ -24,10 +24,10 @@ exports.getPdfDoc = (req, res) => {
 
     // JUST I WANT ID TEACHER HERE..
     // const teacherId = req.body.id;
-    Teacher.findOne({ _id: "6431b22ca8514ea551212e27" }).then((dbTeacher) => {
+    Teacher.findOne({ _id: "64503c4d6a91908b55655014" }).then((dbTeacher) => {
       dbTeacher
         .populate({
-          path: "allStudents",
+          path: "allStudents"
         })
         .then((dbTeacher) => {
           dbTeacher.allStudents.forEach((student, index) => {
@@ -41,7 +41,7 @@ exports.getPdfDoc = (req, res) => {
               Parent.findOne({ _id: parentId }).then((dbParent) => {
                 const defaultOptions = {
                   margins: { top: 50, left: 100, right: 100, bottom: 10 },
-                  size: "A4",
+                  size: "A4"
                 };
                 const mathMarkFirst =
                   dbStudent.typeExam.first.subjects.math.mark;
@@ -220,7 +220,7 @@ exports.getPdfDoc = (req, res) => {
                   .text(`Monthlly Report(${type})`, {
                     fit: [250, 300],
                     align: "center",
-                    valign: "center",
+                    valign: "center"
                   })
                   .moveDown();
                 pdfDoc.moveDown();
@@ -244,14 +244,14 @@ exports.getPdfDoc = (req, res) => {
                   .text(`ID Number : ${lastTwoCharId}`, {
                     fit: [250, 300],
                     align: "center",
-                    valign: "center",
+                    valign: "center"
                   });
                 pdfDoc.moveDown();
 
                 pdfDoc.fontSize(14).text(`Class : ${dbStudent.class}`, {
                   fit: [250, 300],
                   align: "center",
-                  valign: "center",
+                  valign: "center"
                 });
                 pdfDoc.moveDown();
 
@@ -259,7 +259,7 @@ exports.getPdfDoc = (req, res) => {
                 pdfDoc.fontSize(14).text(`Teacher : ${teacherName}`, {
                   fit: [250, 300],
                   align: "center",
-                  valign: "center",
+                  valign: "center"
                 });
 
                 pdfDoc.moveDown();
@@ -326,32 +326,32 @@ exports.getPdfDoc = (req, res) => {
                         label: "Subject",
                         property: "subject",
                         width: 60,
-                        renderer: null,
+                        renderer: null
                       },
                       {
                         label: "Behavior",
                         property: "behavior",
                         width: 60,
-                        renderer: null,
+                        renderer: null
                       },
                       {
                         label: "Mark",
                         property: "mark",
                         width: 60,
-                        renderer: null,
+                        renderer: null
                       },
                       {
                         label: "Note",
                         property: "note",
                         width: 150,
-                        renderer: null,
+                        renderer: null
                       },
                       {
                         label: "Star",
                         property: "star",
                         width: 60,
-                        renderer: null,
-                      },
+                        renderer: null
+                      }
                     ],
                     rows: [
                       [
@@ -359,37 +359,37 @@ exports.getPdfDoc = (req, res) => {
                         mathBehavior || "undefined",
                         `${mathMark}` || "undefind",
                         mathNote || "undefind",
-                        `${mathStar}/5`,
+                        `${mathStar}/5`
                       ],
                       [
                         "English",
                         englishBehavior || "undefined",
                         `${englishMark}` || "undefind",
                         englishNote || "undefind",
-                        `${englishStar}/5`,
+                        `${englishStar}/5`
                       ],
                       [
                         "Arbic",
                         arbicBehavior || "undefined",
                         `${arbicMark}` || "undefind",
                         arbicNote || "undefind",
-                        `${arbicStar}/5`,
+                        `${arbicStar}/5`
                       ],
                       [
                         "History",
                         historyBehavior || "undefined",
                         `${historyMark}` || "undefind",
                         historyNote || "undefind",
-                        `${historyStar}/5`,
+                        `${historyStar}/5`
                       ],
                       [
                         "Science",
                         scienceBehavior || "undefined",
                         `${scienceMark}` || "undefind",
                         scienceNote || "undefind",
-                        `${scienceStar}/5`,
-                      ],
-                    ],
+                        `${scienceStar}/5`
+                      ]
+                    ]
                   };
                   // the magic
                   pdfDoc.table(table, {
@@ -399,7 +399,7 @@ exports.getPdfDoc = (req, res) => {
                       pdfDoc.font("Helvetica").fontSize(9);
                       indexColumn === 0 &&
                         pdfDoc.addBackground(rectRow, "green", 0.26);
-                    },
+                    }
                   });
                 })();
 
@@ -424,16 +424,16 @@ exports.getPdfDoc = (req, res) => {
                     {
                       filename: `report-${index}.pdf`,
                       path: pdfPath,
-                      contentType: "application/pdf",
-                    },
-                  ],
+                      contentType: "application/pdf"
+                    }
+                  ]
                 });
-              })
-            })
-            res.sendFile(pdfPath);
+              });
+            });
+            res.json("the report  send");
           });
         });
-    })
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send("server error occured");

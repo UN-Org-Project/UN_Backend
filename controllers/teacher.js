@@ -28,7 +28,7 @@ exports.getNumberOfAllTeachers = (req, res) => {
 // from here
 exports.add_Abs_Note_Rate = (req, res, next) => {
   const body = req.body.studentsData;
-  Teacher.findOne({ _id: "6431b22ca8514ea551212e27" })
+  Teacher.findOne({ _id: "64503c4d6a91908b55655014" })
     .then((dbTeacher) => {
       dbTeacher
         .populate({
@@ -46,7 +46,7 @@ exports.add_Abs_Note_Rate = (req, res, next) => {
             student.dalyRate.push({
               star: body[index].level
             });
-             getStudentLevelRate(student._id);
+            getStudentLevelRate(student._id);
             student.save();
           });
           dbTeacher.save();
@@ -69,9 +69,9 @@ getStudentLevelRate = (id) => {
         numOfStars++;
         return (sum += s.star);
       });
-      
+
       sum /= numOfStars;
-      sum *= 20; 
+      sum *= 20;
       dbStudent.studentLevelRate = Math.trunc(sum);
       dbStudent.save();
     })
@@ -99,7 +99,7 @@ getStudentLevelRate = (id) => {
 
 exports.addtypeExam = (req, res, next) => {
   const body = req.body.studentsMark;
-  Teacher.findOne({ _id: "6431b22ca8514ea551212e27" })
+  Teacher.findOne({ _id: "64503c4d6a91908b55655014" })
     .then((dbTeacher) => {
       dbTeacher
         .populate({

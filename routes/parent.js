@@ -12,6 +12,6 @@ router.get("/parentInfo/:id", parentController.getParentInfo);
 // Route to get all Parents
 //router.get("/parents", parentController.getAllParents);
 
-router.get("/getPdfDoc/:id", pdfController.getPdfDoc);
+router.post("/getPdfDoc/:id", pdfController.getPdfDoc);
 
 module.exports = router;
