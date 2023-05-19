@@ -5,6 +5,7 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
+const student = require("../models/student");
 const existingUsernames = [];
 const existingpassword = [];
 //const sendgridtransport = require("nodemailer-sendgrid-transport");
@@ -330,11 +331,12 @@ exports.getAllTeachers = (req, res) => {
     });
 };
 
+
 exports.deleteStudent = async (req, res) => {
   try {
     const id = req.params.id;
-    const dbStudent = await Student.find({ _id: id });
-    const parentId = dbStudent[0].parent_id;
+    const dbStudent = await Student.findOne({ _id: id });
+    const parentId = dbStudent.parent_id;
 
     const parent = await Parent.findOne({ _id: parentId })
       .populate({
@@ -344,20 +346,34 @@ exports.deleteStudent = async (req, res) => {
 
     const numStudents = parent.allStudents.length;
 
-    await Teacher.updateOne(
-      { _id: dbStudent.teacher_id },
-      { $pull: { allStudents: id } }
+    const teacher = await Teacher.findOne({ _id: dbStudent.teacher_id })
+      .populate({
+        path: "allStudents",
+      })
+      .exec();
+
+    const indexToRemove = teacher.allStudents.findIndex(
+      (student) => student._id.toString() === id.toString()
     );
+    if (indexToRemove !== -1) {
+      // Remove the student from the allStudents array using the $pull operator
+      teacher.allStudents.splice(indexToRemove, 1);
+      await teacher.save();
+    }
+
     await Parent.updateOne(
       { _id: dbStudent.parent_id },
       { $pull: { allStudents: id } }
     );
+
     await Student.deleteOne({ _id: id });
     console.log("Deleted successfully");
 
     if (numStudents <= 1) {
       await Parent.deleteOne({ _id: parentId });
-      res.json("studnet and parent deleted successfully");
+      res.json("student and parent deleted successfully");
+    } else {
+      res.json("student deleted successfully");
     }
   } catch (error) {
     console.log(error);
@@ -396,12 +412,14 @@ exports.sendStudentInfo = async (req, res, next) => {
         },
       }
     );
-
     //Edit class
     Student.findOne({ _id: id })
       .then(async (dbStudent) => {
-        console.log(id);
+        //console.log(dbStudent);
+        // console.log(data.class);
         if (dbStudent.class != data.class) {
+          dbStudent.class = data.class;
+          dbStudent.save();
           await Teacher.updateOne(
             { _id: data.teacher_id },
             { $pull: { allStudents: id } }
@@ -412,16 +430,22 @@ exports.sendStudentInfo = async (req, res, next) => {
           );
           try {
             const dbTeacher = await Teacher.findOne({ class: data.class });
-            const tId = dbTeacher._id;
-            await Student.updateOne(
-              { _id: id },
-              {
-                $set: {
-                  class: data.class,
-                  teacher_id: tId,
-                },
-              }
-            );
+            if (dbTeacher == null) {
+              dbStudent.teacher_id = null;
+              dbStudent.save();
+            } else {
+              const tId = dbTeacher._id;
+              await Student.updateOne(
+                { _id: id },
+                {
+                  $set: {
+                    class: data.class,
+                    teacher_id: tId,
+                  },
+                }
+              );
+              dbStudent.save();
+            }
           } catch (err) {
             console.log(err);
           }
@@ -429,6 +453,7 @@ exports.sendStudentInfo = async (req, res, next) => {
       })
       .catch((err) => console.log(err));
     //Edite parent name
+
     Parent.findOne({ _id: data.parent_id })
       .then(async (dbParent) => {
         if (data.name != dbParent.name) {
@@ -486,7 +511,7 @@ exports.sendTeacherInfo = async (req, res, next) => {
           adress: data.adress,
           dateOfBirth: data.dateOfBirth,
           experiance: data.experiance,
-          class: data.class,
+          //class: data.class,
           telepohoneNumber: data.telepohoneNumber,
         },
       }
@@ -494,7 +519,39 @@ exports.sendTeacherInfo = async (req, res, next) => {
 
     //Edit gmail
     Teacher.findOne({ _id: id })
-      .then((teacherdb) => {
+      .then(async (teacherdb) => {
+        //Edit class
+        const studentdb = await Student.find({ class: data.class });
+      
+        await Student.updateMany(
+          { teacher_id: teacherdb._id },
+          { $unset: { teacher_id: 1 } }
+        );
+
+        teacherdb.allStudents = teacherdb.allStudents.filter((studentId) => {
+          return (
+            !teacherdb.class ||
+            studentdb.some((student) => student._id.equals(studentId))
+          );
+        });
+
+        if (teacherdb.class != data.class) {
+          await Student.updateMany(
+            { teacher_id: teacherdb._id },
+            { $unset: { teacher_id: 1 } }
+          );
+
+          teacherdb.class = data.class;
+
+          const studentdb = await Student.find({ class: data.class });
+          teacherdb.allStudents = studentdb.map((student) => student._id);
+          await teacherdb.save();
+          await Student.updateMany(
+            { class: teacherdb.class },
+            { $set: { teacher_id: teacherdb._id } }
+          );
+        }
+
         if (data.emailAdress != teacherdb.emailAdress) {
           teacherdb.emailAdress = data.emailAdress;
           const updatePassword = generatePassword("p", 7);
