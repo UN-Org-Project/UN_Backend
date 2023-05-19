@@ -5,6 +5,7 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose");
+const student = require("../models/student");
 const existingUsernames = [];
 const existingpassword = [];
 //const sendgridtransport = require("nodemailer-sendgrid-transport");
@@ -12,8 +13,8 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "ilovesyria898testnode@gmail.com",
-    pass: "pmuojgznqazvmwmp"
-  }
+    pass: "pmuojgznqazvmwmp",
+  },
 });
 //Added astatic Admin to manage the process for add teacher and add parent
 exports.addAdmin = (req, res, next) => {
@@ -27,7 +28,7 @@ exports.addAdmin = (req, res, next) => {
         userName: "muath",
         password: password,
         emailAdress: email,
-        state: "Admin"
+        state: "Admin",
       });
       return admin.save();
     })
@@ -72,7 +73,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         try {
           const student_1 = await student.save();
@@ -88,7 +89,7 @@ exports.postCreatParent = (req, res) => {
                 //here why 1 is static ?
                 numberOfChildren: 1,
                 allStudents: student_1._id,
-                state: state
+                state: state,
               });
 
               return addparent.save();
@@ -122,11 +123,11 @@ exports.postCreatParent = (req, res) => {
                  <h4>This is your information so that you can log in to your website to track
                   your children's academic performance on the following website: 
                   <a href="http://localhost:3000/login">Login</a> . </h4>
-                 `
+                 `,
               });
               return res.status(200).json({
                 message: "new Parent created!",
-                parentId: parent._id
+                parentId: parent._id,
               });
             });
         } catch (err) {
@@ -141,7 +142,7 @@ exports.postCreatParent = (req, res) => {
           gender: Gender,
           adress: adress,
           dateOfBirth: dateOfBirth,
-          class: className
+          class: className,
         });
         //****** * add teacher_id reference in stuedent
         Teacher.findOne({ class: className })
@@ -165,14 +166,14 @@ exports.postCreatParent = (req, res) => {
           const result_2 = await Parent.findOneAndUpdate(
             { emailAdress: emailAdress },
             {
-              $push: { allStudents: student._id }
+              $push: { allStudents: student._id },
             },
             { new: true }
           );
           return res.status(200).json({
             message:
               "the parent is excest the student become involved the parent",
-            StudentId: student._id
+            StudentId: student._id,
           });
         } catch (err) {
           console.log(err);
@@ -214,7 +215,7 @@ exports.postCreatTeacher = (req, res) => {
         experiance: experiance,
         class: _class,
         dateOfBirth: dateOfBirth,
-        state: state
+        state: state,
       });
       Student.find({ class: teacher.class })
         .then((students) => {
@@ -236,7 +237,7 @@ exports.postCreatTeacher = (req, res) => {
             to add all the necessary information to track the academic performance 
             of your class students and the abiliyty to communocate with patents. on the following website: 
              <a href="http://localhost:3000/login">Login</a> . </h4>
-            `
+            `,
           });
           return teacher;
         })
@@ -320,35 +321,75 @@ exports.getAllStudents = (req, res) => {
     });
 };
 
+exports.getAllTeachers = (req, res) => {
+  Teacher.find({})
+    .then((dbStudents) => {
+      res.json(dbStudents);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
 exports.deleteStudent = async (req, res) => {
   try {
     const id = req.params.id;
-    const dbStudent = await Student.find({ _id: id });
-    const parentId = dbStudent[0].parent_id;
+    const dbStudent = await Student.findOne({ _id: id });
+    const parentId = dbStudent.parent_id;
 
     const parent = await Parent.findOne({ _id: parentId })
       .populate({
-        path: "allStudents"
+        path: "allStudents",
       })
       .exec();
 
     const numStudents = parent.allStudents.length;
 
-    await Teacher.updateOne(
-      { _id: dbStudent.teacher_id },
-      { $pull: { allStudents: id } }
+    const teacher = await Teacher.findOne({ _id: dbStudent.teacher_id })
+      .populate({
+        path: "allStudents",
+      })
+      .exec();
+
+    const indexToRemove = teacher.allStudents.findIndex(
+      (student) => student._id.toString() === id.toString()
     );
+    if (indexToRemove !== -1) {
+      // Remove the student from the allStudents array using the $pull operator
+      teacher.allStudents.splice(indexToRemove, 1);
+      await teacher.save();
+    }
+
     await Parent.updateOne(
       { _id: dbStudent.parent_id },
       { $pull: { allStudents: id } }
     );
+
     await Student.deleteOne({ _id: id });
     console.log("Deleted successfully");
 
     if (numStudents <= 1) {
       await Parent.deleteOne({ _id: parentId });
-      res.json("studnet and parent deleted successfully");
+      res.json("student and parent deleted successfully");
+    } else {
+      res.json("student deleted successfully");
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.deleteTeacher = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    await Student.updateMany(
+      { teacher_id: id },
+      { $set: { teacher_id: null } }
+    );
+
+    await Teacher.deleteOne({ _id: id });
+    console.log("Teacher Deleted successfully");
   } catch (error) {
     console.log(error);
   }
@@ -367,16 +408,18 @@ exports.sendStudentInfo = async (req, res, next) => {
           studentName: data.studentName,
           gender: data.gender,
           adress: data.adress,
-          dateOfBirth: data.dateOfBirth
-        }
+          dateOfBirth: data.dateOfBirth,
+        },
       }
     );
-
     //Edit class
     Student.findOne({ _id: id })
       .then(async (dbStudent) => {
-        console.log(id);
+        //console.log(dbStudent);
+        // console.log(data.class);
         if (dbStudent.class != data.class) {
+          dbStudent.class = data.class;
+          dbStudent.save();
           await Teacher.updateOne(
             { _id: data.teacher_id },
             { $pull: { allStudents: id } }
@@ -387,16 +430,22 @@ exports.sendStudentInfo = async (req, res, next) => {
           );
           try {
             const dbTeacher = await Teacher.findOne({ class: data.class });
-            const tId = dbTeacher._id;
-            await Student.updateOne(
-              { _id: id },
-              {
-                $set: {
-                  class: data.class,
-                  teacher_id: tId
+            if (dbTeacher == null) {
+              dbStudent.teacher_id = null;
+              dbStudent.save();
+            } else {
+              const tId = dbTeacher._id;
+              await Student.updateOne(
+                { _id: id },
+                {
+                  $set: {
+                    class: data.class,
+                    teacher_id: tId,
+                  },
                 }
-              }
-            );
+              );
+              dbStudent.save();
+            }
           } catch (err) {
             console.log(err);
           }
@@ -404,6 +453,7 @@ exports.sendStudentInfo = async (req, res, next) => {
       })
       .catch((err) => console.log(err));
     //Edite parent name
+
     Parent.findOne({ _id: data.parent_id })
       .then(async (dbParent) => {
         if (data.name != dbParent.name) {
@@ -428,9 +478,10 @@ exports.sendStudentInfo = async (req, res, next) => {
          <h4>This is your information so that you can log in to your website to track
           your children's academic performance on the following website: 
           <a href="http://localhost:3000/login">Login</a> . </h4>
-         `
+         `,
           });
         }
+        //Edit phone
         if (data.telepohoneNumber != dbParent.telepohoneNumber) {
           dbParent.telepohoneNumber = data.telepohoneNumber;
           dbParent.save();
@@ -440,6 +491,92 @@ exports.sendStudentInfo = async (req, res, next) => {
         return res.json("the Student informatiion updated !!");
       })
       .catch((err) => console.log(err));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+exports.sendTeacherInfo = async (req, res, next) => {
+  id = req.params.id;
+  try {
+    const data = req.body;
+
+    //Edit name, gender, adress, dateOfBirth,exp,class,telepohoneNumber
+    await Teacher.updateOne(
+      { _id: id },
+      {
+        $set: {
+          name: data.name,
+          gender: data.gender,
+          adress: data.adress,
+          dateOfBirth: data.dateOfBirth,
+          experiance: data.experiance,
+          //class: data.class,
+          telepohoneNumber: data.telepohoneNumber,
+        },
+      }
+    );
+
+    //Edit gmail
+    Teacher.findOne({ _id: id })
+      .then(async (teacherdb) => {
+        //Edit class
+        const studentdb = await Student.find({ class: data.class });
+      
+        await Student.updateMany(
+          { teacher_id: teacherdb._id },
+          { $unset: { teacher_id: 1 } }
+        );
+
+        teacherdb.allStudents = teacherdb.allStudents.filter((studentId) => {
+          return (
+            !teacherdb.class ||
+            studentdb.some((student) => student._id.equals(studentId))
+          );
+        });
+
+        if (teacherdb.class != data.class) {
+          await Student.updateMany(
+            { teacher_id: teacherdb._id },
+            { $unset: { teacher_id: 1 } }
+          );
+
+          teacherdb.class = data.class;
+
+          const studentdb = await Student.find({ class: data.class });
+          teacherdb.allStudents = studentdb.map((student) => student._id);
+          await teacherdb.save();
+          await Student.updateMany(
+            { class: teacherdb.class },
+            { $set: { teacher_id: teacherdb._id } }
+          );
+        }
+
+        if (data.emailAdress != teacherdb.emailAdress) {
+          teacherdb.emailAdress = data.emailAdress;
+          const updatePassword = generatePassword("p", 7);
+          const updateUserName = generateUsername("p", data.emailAdress);
+          bcrypt.hash(updatePassword, 12).then((hashedPw) => {
+            teacherdb.password = hashedPw;
+            teacherdb.userName = updateUserName;
+          });
+          teacherdb.save();
+          transporter.sendMail({
+            to: teacherdb.emailAdress,
+            from: "ilovesyria898testnode@gmail.com",
+            subject: "Student Tracking System",
+            html: `<h2>Hello ${teacherdb.name} <br> </h2> 
+         <h3>  <br> username : ${updateUserName} <br> password: ${updatePassword}</h3>
+         <h4>This is your information so that you can log in to your website to track
+          your children's academic performance on the following website: 
+          <a href="http://localhost:3000/login">Login</a> . </h4>
+         `,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (error) {
     console.error(error);
   }
