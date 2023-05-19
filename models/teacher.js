@@ -56,7 +56,7 @@ var TeacherSchema = new Schema({
     type: String,
     required: true
   },
-  allNotes: []
+  allevents: []
 
   //students: [
   //   {

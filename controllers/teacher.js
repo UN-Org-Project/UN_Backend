@@ -262,7 +262,7 @@ exports.getArrayofNotes = (req, res, next) => {
   const id = req.params.id;
   Teacher.findOne({ _id: id })
     .then((teacher) => {
-      return res.json({ notes: teacher.allNotes, id: id });
+      return res.json({ notes: teacher.allevents, id: id });
     })
     .catch((err) => console.log(err));
   // return res.json({ notes: notes, id: id });
@@ -273,10 +273,10 @@ exports.addNotes = (req, res, next) => {
 
   Teacher.findOne({ _id: id })
     .then((teacher) => {
-      const allNotes = teacher.allNotes;
+      const allNotes = teacher.allevents;
       let uniqueSet = lodash.uniqBy([...allNotes, ...updateNotes], "id");
       let NewNotes = Array.from(uniqueSet);
-      teacher.allNotes = NewNotes;
+      teacher.allevents = NewNotes;
 
       teacher.save();
       //    console.log(teacher.allNotes);
@@ -287,7 +287,7 @@ exports.addNotes = (req, res, next) => {
         .then((dbTeacher) => {
           const notes = updateNotes[updateNotes.length - 1];
           dbTeacher.allStudents.forEach((student) => {
-            student.allNotes.push({
+            student.allevents.push({
               notes: notes
             });
             student.save();
@@ -296,7 +296,7 @@ exports.addNotes = (req, res, next) => {
         })
         .catch((err) => console.log(err));
 
-      return res.json({ notes: teacher.allNotes, id: id });
+      return res.json({ notes: teacher.allevents, id: id });
     })
     .catch((err) => console.log(err));
 
@@ -308,8 +308,8 @@ exports.deleteNote = (req, res, nex) => {
   const noteId = req.body.id;
   Teacher.findOne({ _id: id })
     .then((teacher) => {
-      const allNotes = teacher.allNotes;
-      teacher.allNotes = allNotes.filter((note) => note.id != noteId);
+      const allNotes = teacher.allevents;
+      teacher.allevents = allNotes.filter((note) => note.id != noteId);
       teacher.save();
       //    console.log(teacher.allNotes);
       teacher
@@ -318,7 +318,7 @@ exports.deleteNote = (req, res, nex) => {
         })
         .then((dbTeacher) => {
           dbTeacher.allStudents.forEach((student, index) => {
-            student.allNotes = student.allNotes.filter(
+            student.allevents = student.allevents.filter(
               (note) => note.notes.id != noteId
             );
             student.save();
@@ -326,7 +326,7 @@ exports.deleteNote = (req, res, nex) => {
           });
         })
         .catch((err) => console.log(err));
-      return res.json({ notes: teacher.allNotes, id: id });
+      return res.json({ notes: teacher.allevents, id: id });
     })
     .catch((err) => {
       console.log(err);

@@ -49,7 +49,7 @@ var StudentSchema = new Schema({
       _id: false
     }
   ],
-  allNotes: [
+  allevents: [
     {
       notes: Object,
       noteDate: { type: Date, default: Date.now() },

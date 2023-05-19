@@ -430,8 +430,8 @@ exports.getPdfDoc = (req, res) => {
                 });
               });
             });
-            res.json("the report  send");
           });
+          res.json("the report  send");
         });
     });
   } catch (error) {
