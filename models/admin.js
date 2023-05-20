@@ -22,27 +22,6 @@ var adminSchema = new Schema({
     required: true
   },
 
-  allStudents: [
-    Object, //this for tell db we want store students as objects
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Student"
-    }
-  ],
-  allParents: [
-    Object, //this for tell db we want store students as objects
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Parent"
-    }
-  ],
-  allTeacher: [
-    Object, //this for tell db we want store students as objects
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Teacher"
-    }
-  ],
   state: {
     type: String,
     required: true

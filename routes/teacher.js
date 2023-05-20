@@ -8,9 +8,9 @@ router.get("/teachers", teacherController.getAllTeachers);
 
 router.get("/getNumberOfAllTeachers", teacherController.getNumberOfAllTeachers);
 
-
-router.post("/add_Abs_Note_Rate", teacherController.add_Abs_Note_Rate);
-router.post("/addtypeExam", teacherController.addtypeExam);
+//
+router.post("/add_Abs_Note_Rate/:id", teacherController.add_Abs_Note_Rate);
+router.post("/addtypeExam/:id", teacherController.addtypeExam);
 router.get("/sendInfo/:id", teacherController.sendInfo);
 router.get("/getnotes/:id", teacherController.getArrayofNotes);
 router.post("/addNotes/:id", teacherController.addNotes);

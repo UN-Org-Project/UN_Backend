@@ -2,6 +2,7 @@
 // or pmuojgznqazvmwmp
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const mongoose = require("mongoose");
 //const multer = require("multer");
 const bodyParser = require("body-parser");
@@ -43,11 +44,12 @@ app.use((error, req, res, next) => {
 });
 
 //connecting to database
-const MONGODB_URI = 
+const MONGODB_URI =
   //"mongodb+srv://yaseen:20203302@usermanagement.2r3p529.mongodb.net/Parents_Studnts";
   "mongodb+srv://muathmhawich94:0932681293@cluster0.zgtx4nb.mongodb.net/parent-studnet-teacher";
 
 //listen
+app.use(cors());
 mongoose
   .connect(MONGODB_URI)
   .then(console.log("Database Connected!"))

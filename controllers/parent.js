@@ -20,6 +20,7 @@ exports.getParentInfo = (req, res, next) => {
           })
           .then((student) => {
             student.teacherName = student.teacher_id.name;
+
             student.save();
           });
       });

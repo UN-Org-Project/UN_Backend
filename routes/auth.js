@@ -7,5 +7,6 @@ const authController = require("../controllers/auth");
 const router = express.Router();
 
 router.put("/login", authController.login);
+router.post("/Info/:id", authController.AuthChating);
 
 module.exports = router;

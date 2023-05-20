@@ -48,19 +48,19 @@ exports.login = async (req, res, next) => {
 
     //chating ApI
     try {
-      const r = await axios.put(
-        "https://api.chatengine.io/users/",
-        {
-          username: loadedUser._id.toString(),
-          secret: loadedUser._id.toString(),
-          first_name: loadedUser.name
-        },
-        { headers: { "Private-Key": "3254e769-28b8-4061-8fa8-a618a48c6f45" } }
-      );
+      // const r = await axios.put(
+      //   "https://api.chatengine.io/users/",
+      //   {
+      //     username: loadedUser.name,
+      //     secret: loadedUser._id.toString(),
+      //     first_name: loadedUser.name
+      //   },
+      //   { headers: { "Private-Key": "b389195a-54a4-4272-8c6c-b2471e7a6beb" } }
+      // );
       return res.status(200).json({
         id: loadedUser._id,
+        nameOfuser: loadedUser.name,
         state: loadedUser.state,
-        chating_username: r.data,
         first_name: loadedUser.name
       });
     } catch (e) {
@@ -68,5 +68,33 @@ exports.login = async (req, res, next) => {
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.AuthChating = async (req, res, next) => {
+  const id = req.params.id;
+  const userState = req.body.userState;
+  console.log(id);
+  console.log(userState);
+  let Test;
+  if (userState == "Teacher") {
+    Test = Parent;
+  } else {
+    Test = Teacher;
+  }
+  try {
+    const user = await Test.findOne({ _id: id });
+
+    if (user) {
+      return res.status(200).json({
+        nameOfUser: user.name
+      });
+    } else {
+      return res.status(404).json({
+        message: "the UserName is not correct  try again"
+      });
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
