@@ -14,7 +14,6 @@ exports.getAllTeachers = (req, res, next) => {
       res.json(err);
     });
 };
-
 exports.getNumberOfAllTeachers = (req, res) => {
   Teacher.find({})
     .then((dbTeachers) => {
@@ -24,7 +23,6 @@ exports.getNumberOfAllTeachers = (req, res) => {
       res.json(err);
     });
 };
-
 // from here
 exports.add_Abs_Note_Rate = (req, res, next) => {
   const id = req.params.id;

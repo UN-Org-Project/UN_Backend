@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.getPdfDoc = (req, res) => {
+  const id = req.params.id;
   try {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename= report.pdf");
@@ -24,7 +25,7 @@ exports.getPdfDoc = (req, res) => {
 
     // JUST I WANT ID TEACHER HERE..
     // const teacherId = req.body.id;
-    Teacher.findOne({ _id: "64503c4d6a91908b55655014" }).then((dbTeacher) => {
+    Teacher.findOne({ _id: id }).then((dbTeacher) => {
       dbTeacher
         .populate({
           path: "allStudents"
@@ -431,7 +432,7 @@ exports.getPdfDoc = (req, res) => {
               });
             });
           });
-          // res.json("the report  send");
+          return res.json("the report  send");
         });
     });
   } catch (error) {

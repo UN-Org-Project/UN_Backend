@@ -367,15 +367,12 @@ exports.deleteStudent = async (req, res) => {
         path: "allStudents"
       })
       .exec();
-
     const numStudents = parent.allStudents.length;
-
     const teacher = await Teacher.findOne({ _id: dbStudent.teacher_id })
       .populate({
         path: "allStudents"
       })
       .exec();
-
     const indexToRemove = teacher.allStudents.findIndex(
       (student) => student._id.toString() === id.toString()
     );
@@ -389,7 +386,6 @@ exports.deleteStudent = async (req, res) => {
       { _id: dbStudent.parent_id },
       { $pull: { allStudents: id } }
     );
-
     await Student.deleteOne({ _id: id });
     console.log("Deleted successfully");
 
@@ -524,7 +520,6 @@ exports.sendTeacherInfo = async (req, res, next) => {
   id = req.params.id;
   try {
     const data = req.body;
-
     //Edit name, gender, adress, dateOfBirth,exp,class,telepohoneNumber
     await Teacher.updateOne(
       { _id: id },
@@ -540,25 +535,21 @@ exports.sendTeacherInfo = async (req, res, next) => {
         }
       }
     );
-
     //Edit gmail
     Teacher.findOne({ _id: id })
       .then(async (teacherdb) => {
         //Edit class
         const studentdb = await Student.find({ class: data.class });
-
         await Student.updateMany(
           { teacher_id: teacherdb._id },
           { $unset: { teacher_id: 1 } }
         );
-
         teacherdb.allStudents = teacherdb.allStudents.filter((studentId) => {
           return (
             !teacherdb.class ||
             studentdb.some((student) => student._id.equals(studentId))
           );
         });
-
         if (teacherdb.class != data.class) {
           await Student.updateMany(
             { teacher_id: teacherdb._id },
