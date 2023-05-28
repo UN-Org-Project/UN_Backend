@@ -22,11 +22,11 @@ exports.addAdmin = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   bcrypt
-    .hash("muath", 12)
+    .hash("Ahmad", 12)
     .then((password) => {
       const admin = new Admin({
         name: name,
-        userName: "muath",
+        userName: "Ahmad",
         password: password,
         emailAdress: email,
         state: "Admin"
@@ -373,13 +373,15 @@ exports.deleteStudent = async (req, res) => {
         path: "allStudents"
       })
       .exec();
-    const indexToRemove = teacher.allStudents.findIndex(
-      (student) => student._id.toString() === id.toString()
-    );
-    if (indexToRemove !== -1) {
-      // Remove the student from the allStudents array using the $pull operator
-      teacher.allStudents.splice(indexToRemove, 1);
-      await teacher.save();
+    if (teacher != null) {
+      const indexToRemove = teacher.allStudents.findIndex(
+        (student) => student._id.toString() === id.toString()
+      );
+      if (indexToRemove !== -1) {
+        // Remove the student from the allStudents array using the $pull operator
+        teacher.allStudents.splice(indexToRemove, 1);
+        await teacher.save();
+      }
     }
 
     await Parent.updateOne(

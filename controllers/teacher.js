@@ -83,22 +83,6 @@ getStudentLevelRate = (id) => {
     });
 };
 
-//total absences
-
-// exports.getTotalStudentAbs = (req, res, next) => {
-//   Student.findOne({ _id: "641734f22460cdb8b1de6dc9" })
-//   .then(dbStudent => {
-//     dbStudent.totalAbsence = dbStudent.absence.length;
-//     dbStudent.save();
-//   })
-//   .then((result) => {
-//     res.json("get student absence successfully");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// };
-
 exports.addtypeExam = (req, res, next) => {
   const id = req.params.id;
   const body = req.body.studentsMark;
@@ -110,6 +94,7 @@ exports.addtypeExam = (req, res, next) => {
         })
         .then((dbTeacher) => {
           dbTeacher.allStudents.forEach((student, index) => {
+            console.log(body[index].marks);
             const mark = body[index].marks;
             const note = body[index].note;
             const level = body[index].level;
@@ -236,30 +221,6 @@ exports.sendInfo = (req, res, next) => {
       res.status(500).json({ error: err });
     });
 };
-
-// exports.sendInfo = (req, res, next) => {
-//   const id = req.params.id;
-//   Teacher.findOne({ _id: id })
-//     .then((dbTeacher) => {
-//       if (!dbTeacher) {
-//         console.log("no Teacher");
-//       }
-//       return dbTeacher
-//         .populate({
-//           path: "allStudents",
-//           select: "_id studentName gender  dateOfBirth parent_id class teacher_id dalyRate"
-
-//         })
-//         .then((dbTeacher) => {
-//           console.log(dbTeacher);
-//           res.json(dbTeacher);
-//         });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({ error: err });
-//     });
-// };
 
 exports.getArrayofNotes = (req, res, next) => {
   const id = req.params.id;

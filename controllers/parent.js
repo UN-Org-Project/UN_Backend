@@ -19,7 +19,8 @@ exports.getParentInfo = (req, res, next) => {
             path: "teacher_id"
           })
           .then((student) => {
-            student.teacherName = student.teacher_id.name;
+            if (student.teacher != null)
+              student.teacherName = student.teacher_id.name;
 
             student.save();
           });

@@ -46,17 +46,7 @@ exports.login = async (req, res, next) => {
     //res.status(200).json({ loadedUser: loadedUser });
     //7a982130-a74a-4f66-bcc2-6a0b102fdff0
 
-    //chating ApI
     try {
-      // const r = await axios.put(
-      //   "https://api.chatengine.io/users/",
-      //   {
-      //     username: loadedUser.name,
-      //     secret: loadedUser._id.toString(),
-      //     first_name: loadedUser.name
-      //   },
-      //   { headers: { "Private-Key": "b389195a-54a4-4272-8c6c-b2471e7a6beb" } }
-      // );
       return res.status(200).json({
         id: loadedUser._id,
         nameOfuser: loadedUser.name,

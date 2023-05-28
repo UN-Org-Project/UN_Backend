@@ -7,13 +7,6 @@ const studentController = require("../controllers/student");
 // product and Student
 router.get("/students", studentController.getAllStudents);
 
-// Route for retrieving a Parent by id and populating it's Student.
-//router.get("/parents/:id", studentController.getPobulateStudent);
-
-// Route for retrieving a Teacher by id and populating it's Student.
-// router.get("/teachers/:id", studentController.getPobulateStudentsForTeacher);
-
-// here put /student and id for his father
 router.all(
   "/student/:id",
   studentController.creatStudentAndPutHimInCurrentTeacherAndParent
