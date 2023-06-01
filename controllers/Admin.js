@@ -106,7 +106,7 @@ exports.postCreatParent = (req, res) => {
                 },
                 {
                   headers: {
-                    "Private-Key": "b389195a-54a4-4272-8c6c-b2471e7a6beb"
+                    "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e"
                   }
                 }
               );
@@ -249,7 +249,7 @@ exports.postCreatTeacher = (req, res) => {
               first_name: teacher.name
             },
             {
-              headers: { "Private-Key": "b389195a-54a4-4272-8c6c-b2471e7a6beb" }
+              headers: { "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e" }
             }
           );
           const result_1 = await transporter.sendMail({

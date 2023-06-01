@@ -19,8 +19,7 @@ exports.getParentInfo = (req, res, next) => {
             path: "teacher_id"
           })
           .then((student) => {
-            if (student.teacher != null)
-              student.teacherName = student.teacher_id.name;
+            student.teacherName = student.teacher_id.name;
 
             student.save();
           });
@@ -30,6 +29,6 @@ exports.getParentInfo = (req, res, next) => {
     .catch((err) => {
       return res.status(404).json({
         message: "the parent s' student is not defined"
-      });
+      }); //
     });
 };
