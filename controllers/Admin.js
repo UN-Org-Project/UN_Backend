@@ -489,8 +489,9 @@ exports.sendStudentInfo = async (req, res, next) => {
           bcrypt.hash(updatePassword, 12).then((hashedPw) => {
             dbParent.password = hashedPw;
             dbParent.userName = updateUserName;
+            dbParent.save();
           });
-          dbParent.save();
+          // dbParent.save();
           //Edit gmail
           await transporter.sendMail({
             to: dbParent.emailAdress,
@@ -572,13 +573,14 @@ exports.sendTeacherInfo = async (req, res, next) => {
 
         if (data.emailAdress != teacherdb.emailAdress) {
           teacherdb.emailAdress = data.emailAdress;
-          const updatePassword = generatePassword("p", 7);
-          const updateUserName = generateUsername("p", data.emailAdress);
+          const updatePassword = generatePassword("t", 7);
+          const updateUserName = generateUsername("t", data.emailAdress);
           bcrypt.hash(updatePassword, 12).then((hashedPw) => {
             teacherdb.password = hashedPw;
             teacherdb.userName = updateUserName;
+            teacherdb.save();
           });
-          teacherdb.save();
+
           transporter.sendMail({
             to: teacherdb.emailAdress,
             from: "ilovesyria898testnode@gmail.com",
