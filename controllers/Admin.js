@@ -480,6 +480,7 @@ exports.sendStudentInfo = async (req, res, next) => {
       .then(async (dbParent) => {
         if (data.name != dbParent.name) {
           dbParent.name = data.name;
+          dbParent.save();
         }
         if (data.emailAdress != dbParent.emailAdress) {
           dbParent.emailAdress = data.emailAdress;
@@ -543,8 +544,8 @@ exports.sendTeacherInfo = async (req, res, next) => {
         //Edit class
         const studentdb = await Student.find({ class: data.class });
         await Student.updateMany(
-          { teacher_id: teacherdb._id },
-          { $unset: { teacher_id: 1 } }
+          { teacher_id: teacherdb._id }
+          // { $unset: { teacher_id: 1 } }
         );
         teacherdb.allStudents = teacherdb.allStudents.filter((studentId) => {
           return (
