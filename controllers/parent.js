@@ -19,12 +19,22 @@ exports.getParentInfo = (req, res, next) => {
             path: "teacher_id"
           })
           .then((student) => {
-            student.teacherName = student.teacher_id.name;
+            student.teacherName = student.teacher_id
+              ? student.teacher_id.name
+              : null;
 
-            student.save();
+            return student.save();
+          })
+          .then((student) => {
+            Parent.findOne({ _id: parent_id })
+              .populate({
+                path: "allStudents"
+              })
+              .then((parent) => {
+                return res.status(200).json({ parentInfo: parent });
+              });
           });
       });
-      res.status(200).json({ parentInfo: parent });
     })
     .catch((err) => {
       return res.status(404).json({
