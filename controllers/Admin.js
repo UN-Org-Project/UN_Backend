@@ -97,19 +97,19 @@ exports.postCreatParent = (req, res) => {
             })
             .then(async (parent) => {
               console.log(parent);
-              const r = await axios.put(
-                "https://api.chatengine.io/users/",
-                {
-                  username: parent.name,
-                  secret: parent._id.toString(),
-                  first_name: parent.name
-                },
-                {
-                  headers: {
-                    "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e"
-                  }
-                }
-              );
+              // const r = await axios.put(
+              //   "https://api.chatengine.io/users/",
+              //   {
+              //     username: parent.name,
+              //     secret: parent._id.toString(),
+              //     first_name: parent.name
+              //   },
+              //   {
+              //     headers: {
+              //       "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e"
+              //     }
+              //   }
+              // );
 
               //*****add teacher_id reference in student
               Teacher.findOne({ class: className })
@@ -241,17 +241,17 @@ exports.postCreatTeacher = (req, res) => {
           return teacher.save();
         })
         .then(async (teacher) => {
-          const r = await axios.put(
-            "https://api.chatengine.io/users/",
-            {
-              username: teacher.name,
-              secret: teacher._id.toString(),
-              first_name: teacher.name
-            },
-            {
-              headers: { "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e" }
-            }
-          );
+          // const r = await axios.put(
+          //   "https://api.chatengine.io/users/",
+          //   {
+          //     username: teacher.name,
+          //     secret: teacher._id.toString(),
+          //     first_name: teacher.name
+          //   },
+          //   {
+          //     headers: { "Private-Key": "dd26e14f-d313-4e3f-a6c3-d2ba2bb0747e" }
+          //   }
+          // );
           const result_1 = await transporter.sendMail({
             to: teacher.emailAdress,
             from: "ilovesyria898testnode@gmail.com",
