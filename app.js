@@ -46,7 +46,7 @@ app.use((error, req, res, next) => {
 //connecting to database
 const MONGODB_URI =
   //"mongodb+srv://yaseen:20203302@usermanagement.2r3p529.mongodb.net/Parents_Studnts";
-  "mongodb+srv://muathmhawich94:0932681293@cluster0.zgtx4nb.mongodb.net/parent-studnet-teacher";
+  "mongodb+srv://muathmhawich94:0932681293@cluster0.zgtx4nb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 //listen
 app.use(cors());
